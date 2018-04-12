@@ -1,0 +1,38 @@
+.slidebar-wrapper
+    .content
+        background-color: #ffffff
+        position: fixed
+        top: 0
+        left: 0
+        bottom: 0
+        width: 280px
+        transition: all 0.6s
+        z-index: 1
+    .cover
+        background-color: rgba(120, 120, 120, 0.6)
+        position: fixed
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        transition: all 0.6s
+
+.fade-enter
+    opacity: 0
+.fade-enter-active
+    opacity: 1
+    transition: all 0.6s
+.fade-exit
+    opacity: 1
+.fade-exit-active
+    opacity: 0
+
+.slide-enter
+    transform: translateX(-100%)
+.slide-enter-active
+    transform: translateX(0)
+    transition: all 0.6s
+.slide-exit
+    transform: translateX(0)
+.slide-exit-active
+    transform: translateX(-100%)

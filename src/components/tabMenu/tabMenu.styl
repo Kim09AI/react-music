@@ -1,0 +1,23 @@
+.tab-wrapper
+    display: flex
+    height: 30px
+    align-items: center
+    position: relative
+    .tab
+        font-size: 14px
+        color: #2c3e50
+        flex: 0 0 33.3%
+        text-align: center
+        &.active
+            color: #c62f2f
+    .underline
+        position: absolute
+        bottom: 0
+        left: 0
+        transition: all 0.2s
+        &:before
+            content: ''
+            display: block
+            width: 60%
+            border: 1px solid #c62f2f
+            margin: 0 auto

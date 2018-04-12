@@ -1,12 +1,8 @@
 import { combineReducers } from 'redux'
-
-function user(state = {}, action) {
-    switch (action.type) {
-        default:
-            return state
-    }
-}
+import homeData from './homeData'
+import slidebarState from './slidebar'
 
 export default combineReducers({
-    user
+    homeData,
+    slidebarState
 })

@@ -4,13 +4,14 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
+import { callAPIMiddleware } from './utils/reactUtil'
 import reducers from './reducers'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 
 import './styles/index.styl'
 
-const middleware = [thunk]
+const middleware = [thunk, callAPIMiddleware]
 
 if (process.env.NODE_ENV !== 'production') {
     middleware.push(createLogger())
