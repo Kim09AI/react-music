@@ -2,6 +2,7 @@ import Home from '../containers/Home'
 import Found from '../containers/Found'
 import Mime from '../containers/Mime'
 import Radio from '../containers/Radio'
+import Search from '../containers/Search'
 
 const routeConfig = [
     {
@@ -22,6 +23,10 @@ const routeConfig = [
                 component: Radio
             }
         ]
+    },
+    {
+        path: '/search',
+        component: Search
     }
 ]
 

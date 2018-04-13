@@ -1,7 +1,7 @@
 /**
  * 调用示例
  * 
-    export const getHomeData = userId => {
+    export const getHomeData = (userId) => {
         return {
             // 要在之前和之后发送的 action types
             types: {
@@ -31,7 +31,7 @@ export function callAPIMiddleware({ dispatch, getState }) {
             // Normal action: pass it on
             return next(action)
         }
-
+        
         if (types.toString() !== '[object Object]' || types.successType === undefined) {
             throw new Error('Expected an object or property success undefined')
         }

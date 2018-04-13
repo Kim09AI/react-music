@@ -16,7 +16,7 @@ function CommonHeader(props) {
                 <i className={classNames({ iconfont: true, wangyi: true, active: path === '/home' })}>&#xe650;</i>
                 <i className={classNames({ iconfont: true, user: true, active: path === '/user' })}>&#xe60e;</i>
             </div>
-            <i className="iconfont search">&#xe600;</i>
+            <i className="iconfont search" onClick={() => props.history.push('/search')}>&#xe600;</i>
         </div>
     )
 }
