@@ -4,14 +4,15 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLBoolean,
-    GraphQLFloat
+    GraphQLFloat,
+    GraphQLID
 } from 'graphql'
 
 export const Personalized = new GraphQLList(new GraphQLObjectType({
     name: 'Personalized',
     fields: {
         "id": {
-            type: GraphQLInt
+            type: GraphQLID
         }, 
         "type": {
             type: GraphQLInt
