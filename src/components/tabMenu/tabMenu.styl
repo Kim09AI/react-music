@@ -3,11 +3,15 @@
     height: 30px
     align-items: center
     position: relative
+    overflow: scroll
+    &::-webkit-scrollbar
+        width: 0
+        height: 0
     .tab
         font-size: 14px
         color: #2c3e50
-        flex: 0 0 33.3%
         text-align: center
+        min-width: 75px
         &.active
             color: #c62f2f
     .underline
@@ -15,6 +19,7 @@
         bottom: 0
         left: 0
         transition: all 0.2s
+        min-width: 75px
         &:before
             content: ''
             display: block

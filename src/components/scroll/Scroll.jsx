@@ -7,7 +7,7 @@ export default class Scroll extends React.Component {
     componentDidMount() {
         this.initScroll()
     }
-    
+
     componentDidUpdate() {
         this.refresh()
     }
@@ -25,6 +25,16 @@ export default class Scroll extends React.Component {
             scrollX,
             listenScroll
         })
+
+        // 是否派发滚动到底部事件，用于上拉加载
+        if (this.props.pullupFunc) {
+            this.scroll.on('scrollEnd', () => {
+                // 滚动到底部
+                if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+                    this.props.pullupFunc()
+                }
+            })
+        }
     }
 
     refresh() {
@@ -33,7 +43,7 @@ export default class Scroll extends React.Component {
 
     render() {
         return (
-            <div ref={(wrapper => this.wrapper = wrapper)} className="scroll">
+            <div ref={wrapper => this.wrapper = wrapper} className="scroll">
                 {this.props.children}
             </div>
         )
@@ -51,5 +61,6 @@ Scroll.propTypes = {
     probeType: PropTypes.number,
     click: PropTypes.bool,
     scrollX: PropTypes.bool,
-    listenScroll: PropTypes.bool
+    listenScroll: PropTypes.bool,
+    pullupFunc: PropTypes.func
 }

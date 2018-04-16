@@ -1,7 +1,7 @@
 import * as types from './actionTypes'
 import axios from '../utils/axios'
 
-export const search = ({ keywords, limit = 30, offset = 0, type = 1 }) => ({
+export const search = ({ keywords, limit = 20, offset = 0, type = 1 }) => ({
     types: {
         successType: types.SEARCH
     },
@@ -30,7 +30,7 @@ export const search = ({ keywords, limit = 30, offset = 0, type = 1 }) => ({
     })
 })
 
-export const getSearchSuggest = ({ keywords, limit = 30, offset = 0, type = 1 }) => ({
+export const getSearchSuggest = ({ keywords, limit = 20, offset = 0, type = 1 }) => ({
     types: {
         successType: types.GET_SEARCH_SUGGEST
     },
@@ -92,4 +92,14 @@ export const getSearchSuggest = ({ keywords, limit = 30, offset = 0, type = 1 })
             }`
         }
     })
+})
+
+export const addSearchHistory = (keywords) => ({
+    type: types.ADD_SEARCH_HISTORY,
+    keywords
+})
+
+export const rmSearchHistory = (keywords) => ({
+    type: types.RM_SEARCH_HISTORY,
+    keywords
 })

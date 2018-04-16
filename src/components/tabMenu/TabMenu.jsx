@@ -26,7 +26,13 @@ export default class TabMenu extends React.Component {
             <div className="tab-wrapper">
                 {
                     tabs.map((tab, index) => (
-                        <span key={index} className={classNames({ active: currentIndex === index, tab: true })} onClick={() => this.tabSwitch(index)}>{tab.text}</span>
+                        <span key={index}
+                            className={classNames({ active: currentIndex === index, tab: true })} 
+                            style={{ flex: `0 0 ${100 / tabs.length}%`}}
+                            onClick={() => this.tabSwitch(index)}
+                        >
+                            {tab.text}
+                        </span>
                     ))
                 }
                 <div className="underline" style={{width: `${100 / tabs.length}%`, transform: `translateX(${currentIndex * 100}%)`}}></div>
