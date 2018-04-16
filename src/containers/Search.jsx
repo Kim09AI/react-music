@@ -5,30 +5,64 @@ import HistoryList from 'components/historyList/HistoryList'
 import TabMenu from 'components/tabMenu/TabMenu'
 import Scroll from 'components/scroll/Scroll'
 import SongList from 'components/songList/SongList'
+import Loading from 'components/loading/Loading'
 import './search.styl'
 
 class Search extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            probeType: 2,
             keywords: this.props.match.params.keywords || '',
             showHistoryList: !this.props.match.params.keywords,
+            loading: false,
             type: 1,
             tabs: [
-                { text: '单曲', type: 1 },
-                { text: '视频', type: 1004 },
-                { text: '歌手', type: 100 },
-                { text: '专辑', type: 10 },
-                { text: '歌单', type: 1000 },
-                { text: '电台', type: 1009 }
+                { text: '单曲', type: 1, list: [] },
+                { text: '视频', type: 1004, list: [] },
+                { text: '歌手', type: 100, list: [] },
+                { text: '专辑', type: 10, list: [] },
+                { text: '歌单', type: 1000, list: [] },
+                { text: '电台', type: 1009, list: [] }
             ]
         }
     }
 
     componentDidMount() {
-        // this.props.search({ keywords: '少女时' })
-        // this.props.getSearchSuggest({ keywords: '少女时' })
-        // console.log(this.props)
+        this.state.keywords && this.loadSearchResult()
+    }
+
+    componentWillReceiveProps(nextProps, props) {
+        if (nextProps.searchResult !== props.searchResult) {
+            let { type, tabs } = this.state
+            let index = tabs.findIndex(item => item.type === type)
+            let item = tabs[index]
+
+            tabs = [...tabs]
+            tabs.splice(index, 1, {
+                ...item,
+                list: item.list.concat(nextProps.searchResult)
+            })
+
+            this.setState({
+                tabs: tabs
+            })
+        }
+    }
+
+    async loadSearchResult() {
+        let { keywords, type, tabs, probeType } = this.state
+        let offset = tabs[type].list.length
+
+        this.setState({
+            loading: true
+        })
+
+        await this.props.search({ keywords, type, offset })
+
+        this.setState({
+            loading: false
+        })
     }
 
     goBack() {
@@ -78,7 +112,7 @@ class Search extends React.Component {
     }
 
     render() {
-        let { keywords, showHistoryList, tabs } = this.state
+        let { keywords, showHistoryList, tabs, type, loading, probeType } = this.state
         let { searchHistory, rmSearchHistory } = this.props
 
         return (
@@ -96,9 +130,10 @@ class Search extends React.Component {
                 {
                     !showHistoryList && (
                         <div className="search-result-wrapper">
-                            <Scroll>
+                            <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType}>
                                 <div>
-                                    <SongList />
+                                    <SongList list={tabs[0].list} />
+                                    <Loading show={type === tabs[0].type && loading === true} />
                                 </div>
                             </Scroll>
                         </div>
@@ -113,7 +148,6 @@ const mapStateToProps = state => {
     let search = state.search
     return {
         searchResult: search.searchResult,
-        searchSuggest: search.searchSuggest,
         searchHistory: search.history
     }
 }

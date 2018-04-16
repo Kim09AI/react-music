@@ -2,13 +2,18 @@
     .item
         display: flex
         align-items: center
-        padding: 10px 10px 10px 5px
+        padding: 10px
         border-bottom: 1px solid #dddddd
         .song
             flex: 1
+            overflow hidden
             .name
-                font-size: 14px
+                font-size: 16px
                 color: #333333
+                line-height: 1.4
+                overflow: hidden
+                white-space: nowrap
+                text-overflow: ellipsis
             .info
                 font-size: 12px
                 .quality
@@ -20,11 +25,13 @@
                     border-radius: 4px
                     position: relative
                     top: 1px
+                .singer
+                    color: #507daf
                 .small-name
                     color: #707070
         .iconfont
             color: #aaa
+            margin-left: 15px
         .play
             font-size: 18px
-        .more
-            margin-left: 15px
+            
