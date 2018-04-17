@@ -3,7 +3,7 @@ import {
     GraphQLInt,
     GraphQLObjectType
 } from 'graphql'
-import { Songs, Albums, Artists, Mvs } from './model'
+import { Songs, Albums, Artists, Mvs, SearchType } from './model'
 import api from '../../api'
 
 const searchArgs = {
@@ -22,12 +22,12 @@ const searchArgs = {
 }
 
 const searchResult = {
-    type: Songs,
+    type: SearchType,
     args: searchArgs,
     async resolve(root, args) {
         try {
             let res = await api.search(args)
-            return res.result.songs
+            return res.result
         } catch (e) {
             console.log(e)
         }

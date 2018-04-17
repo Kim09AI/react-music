@@ -13,7 +13,7 @@ function SongList(props) {
                         <div className="song">
                             <div className="name">{item.name}</div>
                             <div className="info">
-                                <span className="quality">SQ&nbsp;</span>
+                                <span className="quality">SQ</span>
                                 <span className="singer">{item.artists[0].name}</span>
                                 <span className="small-name">&nbsp;-&nbsp;{item.name}</span>
                             </div>

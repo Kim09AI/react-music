@@ -1,6 +1,65 @@
 import * as types from './actionTypes'
 import axios from '../utils/axios'
 
+const searchTypeQuery = {
+    1: `... on SongResult {
+        count: songCount
+        list: songs {
+            id
+            name
+            artists {
+                name
+                img1v1Url
+            }
+            album {
+                name
+                picId
+                size
+            }
+            duration
+            mvid
+            rtype
+            ftype
+        }
+    }`,
+    1004: `... on MvResult {
+        count: mvCount
+        list: mvs {
+            id
+            cover
+            name
+            playCount
+            artistName
+            duration
+        }
+    }`,
+    10: `... on AlbumResult {
+        count: albumCount
+        list: albums {
+            id
+            name
+            publishTime
+            size
+            picUrl
+            type
+            artist {
+                name
+            }
+        }
+    }`,
+    100: `... on ArtistResult {
+        count: artistCount
+        list: artists {
+            id
+            name
+            picUrl
+            albumSize
+            img1v1Url
+            followed
+        }
+    }`
+}
+
 export const search = ({ keywords, limit = 20, offset = 0, type = 1 }) => ({
     types: {
         successType: types.SEARCH
@@ -9,21 +68,7 @@ export const search = ({ keywords, limit = 20, offset = 0, type = 1 }) => ({
         params: {
             query: `query {
                 searchResult(keywords: "${keywords}", limit: ${limit}, offset: ${offset}, type: ${type}) {
-                    id
-                    name
-                    artists {
-                        name
-                        img1v1Url
-                    }
-                    album {
-                        name
-                        picId
-                        size
-                    }
-                    duration
-                    mvid
-                    rtype
-                    ftype
+                    ${searchTypeQuery[type]}
                 }
             }`
         }

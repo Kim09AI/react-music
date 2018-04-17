@@ -5,7 +5,7 @@ import storage from 'good-storage'
 const SEARCH_HISTORY_KEY = 'searchHistoryKey'
 
 const initialState = {
-    searchResult: [],
+    searchResult: {},
     searchSuggest: {},
     history: storage.get(SEARCH_HISTORY_KEY, [])
 }
