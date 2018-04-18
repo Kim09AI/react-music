@@ -9,7 +9,7 @@ function Loading(props) {
         <div className="loading-more" style={{ visibility: complete || show ? 'visible' : 'hidden' }}>
             {
                 complete ? 
-                    <p className="complete">已经到底了!!!</p> : 
+                    <p className="complete">已经到底了</p> : 
                     <p className="loading">正在加载...</p>
             }
         </div>

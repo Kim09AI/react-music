@@ -6,6 +6,8 @@ import HistoryList from 'components/historyList/HistoryList'
 import TabMenu from 'components/tabMenu/TabMenu'
 import Scroll from 'components/scroll/Scroll'
 import SongList from 'components/songList/SongList'
+import MvList from 'components/mvList/MvList'
+import ArtistList from 'components/artistList/ArtistList'
 import Loading from 'components/loading/Loading'
 import './search.styl'
 
@@ -153,8 +155,16 @@ class Search extends React.Component {
                         <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === 1 })} key={tabs[1].type}>
                             <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType}>
                                 <div>
-                                    
+                                    <MvList list={tabs[1].list} />
                                     <Loading complete={tabs[1].list.length !== 0 && tabs[1].list.length >= tabs[1].count} show={currentIndex === 1 && loading === true} />
+                                </div>
+                            </Scroll>
+                        </div>,
+                        <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === 2 })} key={tabs[2].type}>
+                            <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType}>
+                                <div>
+                                    <ArtistList list={tabs[2].list} />
+                                    <Loading complete={tabs[2].list.length !== 0 && tabs[2].list.length >= tabs[2].count} show={currentIndex === 2 && loading === true} />
                                 </div>
                             </Scroll>
                         </div>

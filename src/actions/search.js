@@ -56,6 +56,8 @@ const searchTypeQuery = {
             albumSize
             img1v1Url
             followed
+            trans
+            alia
         }
     }`
 }

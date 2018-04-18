@@ -33,6 +33,12 @@ const Artist = new GraphQLObjectType({
         img1v1: {
             type: GraphQLInt
         },
+        alia: {
+            type: new GraphQLList(GraphQLString)
+        },
+        trans: {
+            type: GraphQLString
+        },
         transNames: {
             type: new GraphQLList(GraphQLString)
         },
