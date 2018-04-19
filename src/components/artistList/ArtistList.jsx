@@ -9,7 +9,7 @@ function ArtistList(props) {
             {
                 list.map((item, index) => (
                     <div className="item" key={index}>
-                        <img className="icon" src={item.img1v1Url} alt="" />
+                        <div className="icon" style={{ backgroundImage: `url(${item.img1v1Url})`}}></div>
                         <div className="info">
                             <span>{item.name}</span>
                             {

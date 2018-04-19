@@ -45,6 +45,7 @@ const searchTypeQuery = {
             artist {
                 name
             }
+            alias
         }
     }`,
     100: `... on ArtistResult {
@@ -58,6 +59,30 @@ const searchTypeQuery = {
             followed
             trans
             alia
+        }
+    }`,
+    1000: `... on PlayListResult {
+        count: playlistCount
+        list: playlists {
+            name
+            playCount
+            trackCount
+            id
+            coverImgUrl
+            creator {
+                nickname
+            }
+        }
+    }`,
+    1009: `... on RadioResult {
+        count: djRadiosCount
+        list: djRadios {
+            id
+            name
+            picUrl
+            dj {
+                nickname
+            }
         }
     }`
 }

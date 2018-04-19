@@ -4,13 +4,6 @@ import classNames from 'classnames'
 import './tabMenu.styl'
 
 export default class TabMenu extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentIndex: this.props.currentIndex || 0
-        }
-    }
-
     tabSwitch(index) {
         this.setState({
             currentIndex: index
@@ -19,8 +12,7 @@ export default class TabMenu extends React.Component {
     }
 
     render() {
-        let { currentIndex } = this.state
-        let { tabs } = this.props
+        let { tabs, currentIndex } = this.props
 
         return (
             <div className="tab-wrapper">
@@ -45,6 +37,6 @@ TabMenu.propTypes = {
     tabs: PropTypes.arrayOf(PropTypes.shape({
         text: PropTypes.string.isRequired
     })).isRequired,
-    currentIndex: PropTypes.number,
+    currentIndex: PropTypes.number.isRequired,
     onTabClick: PropTypes.func.isRequired
 }

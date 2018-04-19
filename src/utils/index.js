@@ -1,6 +1,6 @@
 export function numFormat(num) {
     if (num >= 100000) {
-        return ~~(num / 100000) + '万'
+        return (num / 10000).toFixed(1) + '万'
     }
     return num
 }
@@ -29,4 +29,13 @@ function padLeft(value, str = '0', len = 2) {
     }
 
     return value
+}
+
+export function getDate(time, connectStr = '.') {
+    let date = new Date(time)
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+
+    return year + connectStr + month + connectStr + day
 }

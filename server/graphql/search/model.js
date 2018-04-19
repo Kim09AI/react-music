@@ -80,6 +80,9 @@ const Album = new GraphQLObjectType({
         },
         type: {
             type: GraphQLString
+        },
+        alias: {
+            type: new GraphQLList(GraphQLString)
         }
     }
 })
