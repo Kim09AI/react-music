@@ -8,6 +8,7 @@ import {
     GraphQLBoolean,
     GraphQLUnionType
 } from 'graphql'
+import { Radios } from '../radio/model'
 
 const Artist = new GraphQLObjectType({
     name: 'Artist',
@@ -223,121 +224,6 @@ const PlayList = new GraphQLObjectType({
     }
 })
 
-const Radio = new GraphQLObjectType({
-    name: 'Radio',
-    fields: {
-        id: {
-            type: GraphQLID
-        },
-        dj: {
-            type: new GraphQLObjectType({
-                name: 'Dj',
-                fields: {
-                    province: {
-                        type: GraphQLInt
-                    },
-                    followed: {
-                        type: GraphQLBoolean
-                    },
-                    avatarUrl: {
-                        type: GraphQLString
-                    },
-                    gender: {
-                        type: GraphQLInt
-                    },
-                    city: {
-                        type: GraphQLInt
-                    },
-                    birthday: {
-                        type: GraphQLFloat
-                    },
-                    userId: {
-                        type: GraphQLID
-                    },
-                    nickname: {
-                        type: GraphQLString
-                    },
-                    signature: {
-                        type: GraphQLString
-                    },
-                    backgroundUrl: {
-                        type: GraphQLString
-                    },
-                    djStatus: {
-                        type: GraphQLInt
-                    }
-                }
-            })
-        },
-        name: {
-            type: GraphQLString
-        },
-        picUrl: {
-            type: GraphQLString
-        },
-        desc: {
-            type: GraphQLString
-        },
-        subCount: {
-            type: GraphQLInt
-        },
-        programCount: {
-            type: GraphQLInt
-        },
-        createTime: {
-            type: GraphQLFloat
-        },
-        categoryId: {
-            type: GraphQLID
-        },
-        category: {
-            type: GraphQLString
-        },
-        radioFeeType: {
-            type: GraphQLInt
-        },
-        feeScope: {
-            type: GraphQLInt
-        },
-        buyed: {
-            type: GraphQLBoolean
-        },
-        purchaseCount: {
-            type: GraphQLInt
-        },
-        price: {
-            type: GraphQLFloat
-        },
-        originalPrice: {
-            type: GraphQLFloat
-        },
-        lastProgramCreateTime: {
-            type: GraphQLFloat
-        },
-        lastProgramName: {
-            type: GraphQLString
-        },
-        lastProgramId: {
-            type: GraphQLID
-        },
-        picId: {
-            type: GraphQLID
-        },
-        shareCount: {
-            type: GraphQLInt
-        },
-        likedCount: {
-            type: GraphQLInt
-        },
-        alg: {
-            type: GraphQLString
-        },
-        commentCount: {
-            type: GraphQLInt
-        }
-    }
-})
-
 export const Songs = new GraphQLList(Song)
 
 export const Albums = new GraphQLList(Album)
@@ -347,8 +233,6 @@ export const Artists = new GraphQLList(Artist)
 export const Mvs = new GraphQLList(Mv)
 
 export const PlayLists = new GraphQLList(PlayList)
-
-export const Radios = new GraphQLList(Radio)
 
 const SongResult = new GraphQLObjectType({
     name: 'SongResult',

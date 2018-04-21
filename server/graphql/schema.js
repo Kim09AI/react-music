@@ -6,6 +6,7 @@ import {
 import banners from './banner/query'
 import personalized from './personalized/query'
 import search from './search/query'
+import radio from './radio/query'
 
 const schema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -13,7 +14,8 @@ const schema = new GraphQLSchema({
         fields: {
             banners,
             personalized,
-            ...search
+            ...search,
+            ...radio
         }
     })
 })

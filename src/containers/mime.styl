@@ -1,0 +1,62 @@
+.user-list
+    .item
+        display: flex
+        align-items: center
+        border-bottom: 1px solid #f3f3f3
+        padding: 12px 15px
+        .iconfont
+            font-size: 20px
+            color: #c62f2f
+        .text
+            color: #333333
+            margin-left: 15px
+        .info
+            margin-left: 5px
+            color: #c5c4c4
+            font-size: 12px
+.header
+    display: flex
+    justify-content: space-between
+    background-color: rgb(231, 233, 232)
+    padding: 5px 10px
+    .title
+        font-size: 12px
+        color: #565656
+        margin-left: 5px
+    .iconfont
+        color: #b5b5b5
+        display: inline-block
+    .arrow
+        transition: all 0.3s
+        transform: rotate(90deg)
+.personalized-list
+    .item
+        display: flex
+        align-items: center
+        padding: 5px
+        position relative
+        &:after
+            content: ''
+            position: absolute
+            left: calc(20% + 10px)
+            right 0
+            bottom: 0
+            border-bottom: 1px solid #f3f3f3
+        .icon
+            width: 20%
+            padding-top: 20%
+            min-width 20%
+            margin-right: 10px
+            background: url(/images/personalized.png) no-repeat
+            background-size: cover
+        .content
+            flex: 1
+            .text
+                color: #333333
+            .num
+                font-size: 12px
+                color: #909090
+                margin-top: 10px
+        .iconfont
+            font-size: 18px
+            color: #909090

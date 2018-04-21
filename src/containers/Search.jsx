@@ -91,16 +91,14 @@ class Search extends React.Component {
         this.props.history.goBack()
     }
 
-    handleChange(e) {
-        this.setState({
-            keywords: e.target.value
-        })
-    }
-
     submit(e) {
         e.preventDefault()
 
-        let keywords = this.state.keywords
+        let keywords = this.input.value
+        this.setState({
+            keywords
+        })
+        
         this.addSearchHistory(keywords)
 
         let path = `/search/${encodeURIComponent(keywords)}`
@@ -166,7 +164,7 @@ class Search extends React.Component {
             <div>
                 <form className="search-box" onSubmit={(e) => this.submit(e)}>
                     <i className="iconfont back" onClick={() => this.goBack()}>&#xe606;</i>
-                    <input type="text" className="search-input" value={keywords} onChange={(e) => this.handleChange(e)} placeholder="请输入关键词..."/>
+                    <input type="text" ref={input => this.input = input} className="search-input" defaultValue={keywords} placeholder="请输入关键词..."/>
                 </form>
                 {
                     !isSearchResultPage && <HistoryList searchHistory={searchHistory} onKeywordsClick={(keywords) => this.keywordsClick(keywords)} onCloseClick={rmSearchHistory} />

@@ -1,7 +1,6 @@
 import React from 'react'
 import CommonHeader from '../components/commonHeader/CommonHeader'
 import TabMenu from '../components/tabMenu/TabMenu'
-import Scroll from '../components/scroll/Scroll'
 import './home.styl'
 
 class Home extends React.Component {
@@ -33,10 +32,8 @@ class Home extends React.Component {
                 <CommonHeader />
                 <TabMenu tabs={this.state.tabs} currentIndex={this.currentIndex()} onTabClick={(index) => this.onTabClick(index)} />
                 <div className="scroll-wrapper">
-                    <Scroll>
-                        {/* 添加嵌套路由 */}
-                        {this.props.children}
-                    </Scroll>
+                    {/* 添加嵌套路由 */}
+                    {this.props.children}
                 </div>
             </div>
         )

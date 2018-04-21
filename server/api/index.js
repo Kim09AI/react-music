@@ -30,6 +30,18 @@ class Server {
             }
         })
     }
+
+    getRadioRecommend() {
+        return axios.get('/dj/recommend')
+    }
+
+    getRadioRecommendType(type = 1) {
+        return axios.get('/dj/recommend/type', {
+            params: {
+                type
+            }
+        })
+    }
 }
 
 export default new Server()

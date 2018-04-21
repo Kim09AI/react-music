@@ -1,0 +1,49 @@
+.radio-thumbnail-list-wrapper
+    .title
+        font-size: 16px
+        color: #333333
+        padding: 15px 10px
+        position relative
+        &:before
+            content: ''
+            position: absolute
+            left: 0
+            top: 50%
+            transform: translateY(-50%)
+            border-left: 2px solid #c62f2f
+            height: 15px
+    .thumbnail-list
+        display: flex
+        flex-wrap: wrap
+        .item:nth-child(3n + 1)
+            margin-left: 0
+        .item
+            flex: 0 0 calc(100% / 3 - 2px)
+            margin-left: 3px
+            position relative
+            .img
+                padding-top: 100%
+                background-size: cover
+                background-position center center 
+                margin-bottom: 5px
+                position relative
+                .name
+                    position: absolute
+                    left: 5px
+                    bottom: 7px
+                    color: #ffffff
+                    font-size: 12px
+                    overflow hidden
+                    white-space nowrap
+                    text-overflow: ellipsis
+                    width: 100%
+            .text
+                font-size: 14px
+                color: #333333
+                display: -webkit-box
+                text-overflow: ellipsis
+                overflow: hidden
+                -webkit-line-clamp: 2
+                line-height: normal
+                padding: 0 5px
+                margin-bottom: 10px
