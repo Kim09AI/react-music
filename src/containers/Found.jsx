@@ -11,8 +11,14 @@ class Found extends React.Component {
         this.props.getHomeData()
     }
 
+    onItemClick(index) {
+        let id = this.props.personalized[index].id
+        
+        this.props.history.push(`/playlistdetail/${id}`)
+    }
+
     render() {
-        let { banners, personalized } = this.props.homeData
+        let { banners, personalized } = this.props
         
         return (
             <Scroll>
@@ -54,7 +60,7 @@ class Found extends React.Component {
                         </div>
                     </div>
                     {
-                        personalized && <ThumbnailList title="推荐歌单" list={personalized} showNum={9} />
+                        personalized && <ThumbnailList onClick={(index) => this.onItemClick(index)} title="推荐歌单" list={personalized} showNum={9} />
                     }
                 </div>
             </Scroll>
@@ -63,7 +69,8 @@ class Found extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    homeData: state.homeData
+    banners: state.homeData.banners,
+    personalized: state.homeData.personalized
 })
 
 const mapDispatchToProps = {

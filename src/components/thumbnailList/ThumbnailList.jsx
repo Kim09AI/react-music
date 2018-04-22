@@ -31,7 +31,7 @@ export default function ThumbnailList(props) {
                         }
 
                         return (
-                            <div className="item" key={index}>
+                            <div className="item" key={index} onClick={() => props.onClick(index)}>
                                 <div className="img" style={{ backgroundImage: `url(${item.picUrl})` }}></div>
                                 <span className="count">
                                     <i className="iconfont icon-erji">&#xe6c8;</i>
@@ -62,5 +62,6 @@ ThumbnailList.propTypes = {
             PropTypes.number
         ]),
     })).isRequired,
-    showNum: PropTypes.number
+    showNum: PropTypes.number,
+    onClick: PropTypes.func.isRequired
 }
