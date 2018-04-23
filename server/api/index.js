@@ -42,6 +42,46 @@ class Server {
             }
         })
     }
+
+    getPlayListDetail(id) {
+        return axios.get('/playlist/detail', {
+            params: {
+                id
+            }
+        })
+    }
+
+    getAlbumDetail(id) {
+        return axios.get('/album', {
+            params: {
+                id
+            }
+        })
+    }
+
+    getArtistDetail(id) {
+        return axios.get('/artists', {
+            params: {
+                id
+            }
+        })
+    }
+
+    getRadioDetail(rid) {
+        return axios.get('/dj/detail', {
+            params: {
+                rid
+            }
+        })
+    }
+
+    getRadioProgram(rid) {
+        return axios.get('/dj/program', {
+            params: {
+                rid
+            }
+        })
+    }
 }
 
 export default new Server()

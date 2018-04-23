@@ -3,7 +3,11 @@ import {
     GraphQLInt,
     GraphQLObjectType
 } from 'graphql'
-import { Songs, Albums, Artists, Mvs, SearchType } from './model'
+import { SearchType } from './model'
+import { Albums } from '../album/model'
+import { Artists } from '../artist/model'
+import { Mvs } from '../mv/model'
+import { Songs } from '../song/model'
 import api from '../../api'
 
 const searchArgs = {

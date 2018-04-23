@@ -7,45 +7,8 @@ import {
     GraphQLID,
     GraphQLBoolean
 } from 'graphql'
-
-const Dj = new GraphQLObjectType({
-    name: 'Dj',
-    fields: {
-        province: {
-            type: GraphQLInt
-        },
-        followed: {
-            type: GraphQLBoolean
-        },
-        avatarUrl: {
-            type: GraphQLString
-        },
-        gender: {
-            type: GraphQLInt
-        },
-        city: {
-            type: GraphQLInt
-        },
-        birthday: {
-            type: GraphQLFloat
-        },
-        userId: {
-            type: GraphQLID
-        },
-        nickname: {
-            type: GraphQLString
-        },
-        signature: {
-            type: GraphQLString
-        },
-        backgroundUrl: {
-            type: GraphQLString
-        },
-        djStatus: {
-            type: GraphQLInt
-        }
-    }
-})
+import { User } from '../user/model'
+import { Song } from '../song/model'
 
 export const Radio = new GraphQLObjectType({
     name: 'Radio',
@@ -54,7 +17,7 @@ export const Radio = new GraphQLObjectType({
             type: GraphQLID
         },
         dj: {
-            type: Dj
+            type: User
         },
         name: {
             type: GraphQLString
@@ -129,3 +92,92 @@ export const Radio = new GraphQLObjectType({
 })
 
 export const Radios = new GraphQLList(Radio)
+
+const RadioProgram = new GraphQLObjectType({
+    name: 'RadioPrograms',
+    fields: {
+        "mainSong": {
+            type: Song
+        }, 
+        "dj": {
+            type: User
+        }, 
+        "blurCoverUrl": {
+            type: GraphQLString
+        }, 
+        "radio": {
+            type: Radio
+        }, 
+        "duration": {
+            type: GraphQLInt
+        }, 
+        "buyed": {
+            type: GraphQLBoolean
+        }, 
+        "canReward": {
+            type: GraphQLBoolean
+        }, 
+        "isPublish": {
+            type: GraphQLBoolean
+        }, 
+        "serialNum": {
+            type: GraphQLInt
+        }, 
+        "createTime": {
+            type: GraphQLFloat
+        }, 
+        "listenerCount": {
+            type: GraphQLInt
+        }, 
+        "subscribedCount": {
+            type: GraphQLInt
+        }, 
+        "reward": {
+            type: GraphQLBoolean
+        }, 
+        "feeScope": {
+            type: GraphQLInt
+        }, 
+        "pubStatus": {
+            type: GraphQLInt
+        }, 
+        "bdAuditStatus": {
+            type: GraphQLInt
+        }, 
+        "coverUrl": {
+            type: GraphQLString
+        }, 
+        "mainTrackId": {
+            type: GraphQLID
+        }, 
+        "programFeeType": {
+            type: GraphQLInt
+        }, 
+        "description": {
+            type: GraphQLString
+        }, 
+        "trackCount": {
+            type: GraphQLInt
+        }, 
+        "name": {
+            type: GraphQLString
+        }, 
+        "id": {
+            type: GraphQLID
+        }, 
+        "shareCount": {
+            type: GraphQLInt
+        },
+        "subscribed": {
+            type: GraphQLBoolean
+        }, 
+        "likedCount": {
+            type: GraphQLInt
+        }, 
+        "commentCount": {
+            type: GraphQLInt
+        }
+    }
+})
+
+export const RadioPrograms = new GraphQLList(RadioProgram)
