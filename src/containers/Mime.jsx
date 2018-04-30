@@ -35,7 +35,7 @@ export default class Mime extends React.Component {
                         </div>
                     </div>
                     <div>
-                        <div className="header">
+                        <div className="play-list-header">
                             <div>
                                 <i className="iconfont arrow">&#xe628;</i>
                                 <span className="title">创建的歌单(1)</span>

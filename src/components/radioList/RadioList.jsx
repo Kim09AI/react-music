@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import './radioList.styl'
 
 function RadioList(props) {
-    let { list } = props
+    let { list,  onContentClick} = props
+
     return (
         <div className="radio-list">
             {
                 list.map((item, index) => (
-                    <div className="item" key={index}>
+                    <div className="item" key={index} onClick={() => onContentClick(index)}>
                         <div className="icon" style={{ backgroundImage: `url(${item.picUrl})`}}></div>
                         <div className="info">
                             <div className="name">{item.name}</div>
@@ -22,7 +23,8 @@ function RadioList(props) {
 }
 
 RadioList.propTypes = {
-    list: PropTypes.arrayOf(PropTypes.object).isRequired
+    list: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onContentClick: PropTypes.func.isRequired
 }
 
 export default RadioList

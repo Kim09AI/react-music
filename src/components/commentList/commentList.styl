@@ -1,0 +1,40 @@
+.comment-list-wrapper
+    .title
+        color: #333333
+        font-size: 15px
+        position relative
+        padding-left: 10px
+        &:before
+            content: ''
+            position: absolute
+            left: 0
+            top: 0
+            bottom: 0
+            margin: auto
+            border-left: 2px solid #c62f2f
+            height 15px
+    .item
+        padding: 15px 10px
+        border-bottom: 1px solid #eee
+        &:last-child
+            border-bottom: none 
+        .user
+            display: flex
+            align-items: center
+            img 
+                width: 35px
+                height: 35px
+                border-radius: 50%
+            .name
+                font-size: 14px
+                color: #646867
+                margin-left: 15px
+        .content
+            margin-left: 50px
+            line-height: 1.3
+            font-size: 14px
+        .program-name
+            margin-left: 50px
+            color: #646867
+            font-size: 12px
+            margin-top: 10px

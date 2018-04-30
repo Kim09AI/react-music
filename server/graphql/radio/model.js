@@ -10,6 +10,27 @@ import {
 import { User } from '../user/model'
 import { Song } from '../song/model'
 
+const Comment = new GraphQLObjectType({
+    name: 'Comment',
+    fields: {
+        commentId: {
+            type: GraphQLID
+        },
+        programId: {
+            type: GraphQLID
+        },
+        content: {
+            type: GraphQLString
+        },
+        programName: {
+            type: GraphQLString
+        },
+        userProfile: {
+            type: User
+        }
+    }
+})
+
 export const Radio = new GraphQLObjectType({
     name: 'Radio',
     fields: {
@@ -27,6 +48,9 @@ export const Radio = new GraphQLObjectType({
         },
         desc: {
             type: GraphQLString
+        },
+        commentDatas: {
+            type: new GraphQLList(Comment)
         },
         subCount: {
             type: GraphQLInt

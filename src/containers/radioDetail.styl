@@ -1,0 +1,173 @@
+.radio-detail-nav-header
+    display: flex
+    height 50px
+    align-items: center
+    padding: 0 15px 0 20px
+    position relative
+    z-index: 1
+    background-color #c62f2f
+    .back
+        color: #ffffff
+    .title
+        font-size: 16px
+        color: #ffffff
+        margin-left: 15px
+        flex: 1
+    .shape
+        font-size: 20px
+        color: #ffffff
+    .more
+        font-size: 20px
+        margin-left: 20px
+        color: #ffffff
+.radio-detail-wrapper
+    position: fixed
+    top: 0
+    left 0
+    right 0
+    bottom: 0
+    .banner
+        height 260px
+        position relative
+        background-repeat: no-repeat
+        background-size cover
+        background-position: center
+        &:after
+            content: ''
+            position: absolute
+            top: 0
+            left 0
+            right 0
+            bottom: 0
+            background: linear-gradient(rgba(120, 120, 120, 0.7), rgba(140, 140, 140, 0), rgba(140, 140, 140, 0), rgba(120, 120, 120, 0.7))
+        .content
+            position: absolute
+            left 0
+            right 0
+            bottom: 20px
+            display: flex
+            justify-content: space-between
+            align-items: center
+            padding: 0 15px
+            z-index: 1
+            .name
+                font-size: 18px
+                color: #ffffff
+            .count
+                font-size: 14px
+                margin-top: 8px
+                color: #ececec
+            .sub-btn
+                padding: 10px 20px
+                background-color rgb(205, 61, 61)
+                color: #ffffff
+                font-size: 14px
+                border-radius: 34px
+    .radio-tab-wrapper
+        display: flex
+        height: 30px
+        align-items: center
+        position: relative
+        .tab
+            font-size: 14px
+            color: #2c3e50
+            text-align: center
+            flex: 1
+            &.active
+                color: #c62f2f
+            .programCount
+                font-size: 12px
+                color: #b3b3b3
+        .underline
+            position: absolute
+            bottom: 0
+            left: 0
+            width: 50%
+            transition: all 0.2s
+            border-bottom: 2px solid #c62f2f
+    .author-info-wrapper
+        .title
+            padding: 20px 0 20px 10px
+            border-bottom: 1px solid #eeeeee
+            color: #333333
+            font-size: 15px
+            position relative
+            &:before
+                content: ''
+                position: absolute
+                left: 0
+                top: 0
+                bottom: 0
+                margin: auto
+                border-left: 2px solid #c62f2f
+                height 15px
+        .info
+            display: flex
+            align-items: center
+            padding: 10px
+            border-bottom: 1px solid #eeeeee
+            img 
+                height 55px
+                width 55px
+                border-radius: 50%
+            .content
+                flex: 1
+                margin-left: 10px
+                overflow hidden
+                .desc
+                    font-size: 12px
+                    color: #aaaaaa
+                    margin-top: 5px
+                    display: -webkit-box
+                    text-overflow: ellipsis
+                    overflow: hidden
+                    -webkit-line-clamp: 2
+            .reward
+                font-size: 14px
+                color: #c62f2f
+                border: 1px solid #c62f2f
+                padding: 5px 15px
+                border-radius: 26px
+            .count
+                font-size: 12px
+                color: #aaaaaa
+                margin-top: 3px
+                text-align: center
+    .radio-info-wrapper
+        padding: 30px 0
+        .title
+            color: #333333
+            font-size: 15px
+            position relative
+            padding-left: 10px
+            &:before
+                content: ''
+                position: absolute
+                left: 0
+                top: 0
+                bottom: 0
+                margin: auto
+                border-left: 2px solid #c62f2f
+                height 15px
+        .content
+            padding: 15px 10px
+            color: rgb(100, 104, 103)
+            font-size: 14px
+            line-height: 21px
+            .category
+                color: #c62f2f
+                border: 1px solid #c62f2f
+                font-size: 12px
+                padding: 0 2px
+                border-radius: 3px
+    .program-header
+        display: flex
+        justify-content: space-between
+        padding: 5px 10px
+        background-color rgb(231, 233, 232)
+        font-size: 14px
+        color: rgb(99, 101, 100)
+        .choose
+            margin-left: 20px
+        .iconfont
+            font-size: 15px

@@ -1,21 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { numFormat } from 'utils/index'
 import './thumbnailList.styl'
 
 export default function ThumbnailList(props) {
     let { title, list, showNum } = props
-
-    function format(num) {
-        if (num > 100000000) {
-            return (num / 100000000).toFixed(1) + '亿'
-        }
-
-        if (num > 10000) {
-            return (num / 10000).toFixed(1) + '万'
-        }
-
-        return num
-    }
 
     return (
         <div className="thumbnail-list-wrapper">
@@ -35,7 +24,7 @@ export default function ThumbnailList(props) {
                                 <div className="img" style={{ backgroundImage: `url(${item.picUrl})` }}></div>
                                 <span className="count">
                                     <i className="iconfont icon-erji">&#xe6c8;</i>
-                                    {format(item.playCount)}    
+                                    {numFormat(item.playCount)}    
                                 </span>
                                 <div className="name" style={{ WebkitBoxOrient: 'vertical' }}>{item.name}</div>
                             </div>

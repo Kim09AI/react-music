@@ -9,14 +9,18 @@ class Radio extends React.Component {
         this.props.getRadio()
     }
 
+    itemClick(id) {
+        this.props.history.push(`/radioDetail/${id}`)
+    }
+
     render() {
         let { radioRecommendType, radioRecommends } = this.props
         
         return (
             <Scroll>
                 <div>
-                    <RadioThumbnailList list={radioRecommends} title="电台推荐" />
-                    <RadioThumbnailList list={radioRecommendType} title="电台分类推荐" />
+                    <RadioThumbnailList list={radioRecommends} title="电台推荐" onItemClick={(id) => this.itemClick(id)} />
+                    <RadioThumbnailList list={radioRecommendType} title="电台分类推荐" onItemClick={(id) => this.itemClick(id)} />
                 </div>
             </Scroll>
         )

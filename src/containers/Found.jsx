@@ -14,7 +14,7 @@ class Found extends React.Component {
     onItemClick(index) {
         let id = this.props.personalized[index].id
         
-        this.props.history.push(`/playlistdetail/${id}`)
+        this.props.history.push(`/playlistDetail/${id}`)
     }
 
     render() {

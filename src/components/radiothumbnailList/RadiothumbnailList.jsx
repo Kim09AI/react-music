@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import './radiothumbnailList.styl'
 
 export default function RadioThumbnailList(props) {
-    let { title, list, showNum } = props
+    let { title, list, showNum, onItemClick } = props
 
     return (
         <div className="radio-thumbnail-list-wrapper">
@@ -19,7 +19,7 @@ export default function RadioThumbnailList(props) {
                         }
 
                         return (
-                            <div className="item" key={index}>
+                            <div className="item" key={item.id} onClick={() => onItemClick(item.id)}>
                                 <div className="img" style={{ backgroundImage: `url(${item.picUrl})` }}>
                                     <span className="name">{item.name}</span>
                                 </div>
@@ -48,5 +48,6 @@ RadioThumbnailList.propTypes = {
             PropTypes.number
         ]),
     })).isRequired,
-    showNum: PropTypes.number
+    showNum: PropTypes.number,
+    onItemClick: PropTypes.func
 }

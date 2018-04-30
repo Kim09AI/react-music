@@ -4,12 +4,12 @@ import { numFormat } from 'utils/index'
 import './playList.styl'
 
 function PlayList(props) {
-    let { list } = props
+    let { list, onContentClick } = props
     return (
         <div className="play-list">
             {
                 list.map((item, index) => (
-                    <div className="item" key={index}>
+                    <div className="item" key={index} onClick={() => onContentClick(index)}>
                         <div className="icon" style={{ backgroundImage: `url(${item.coverImgUrl})`}}></div>
                         <div className="info">
                             <div className="name">{item.name}</div>
@@ -27,7 +27,8 @@ function PlayList(props) {
 }
 
 PlayList.propTypes = {
-    list: PropTypes.arrayOf(PropTypes.object).isRequired
+    list: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onContentClick: PropTypes.func.isRequired
 }
 
 export default PlayList

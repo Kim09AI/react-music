@@ -4,6 +4,7 @@ import Mime from 'containers/Mime'
 import Radio from 'containers/Radio'
 import Search from 'containers/Search'
 import PlaylistDetail from 'containers/PlaylistDetail'
+import RadioDetail from 'containers/RadioDetail'
 
 const routeConfig = [
     {
@@ -35,8 +36,12 @@ const routeConfig = [
         component: Search
     },
     {
-        path: '/playlistdetail/:id',
+        path: '/playlistDetail/:id',
         component: PlaylistDetail
+    },
+    {
+        path: '/radioDetail/:id',
+        component: RadioDetail
     }
 ]
 

@@ -35,6 +35,17 @@ export default class Scroll extends React.Component {
                 }
             })
         }
+
+        // 实时派发滚动坐标
+        if (this.props.scrollFunc) {
+            this.scroll.on('scroll', e => {
+                this.props.scrollFunc(e)
+            })
+
+            this.scroll.on('scrollEnd', e => {
+                this.props.scrollFunc(e)
+            })
+        }
     }
 
     refresh() {
@@ -62,5 +73,6 @@ Scroll.propTypes = {
     click: PropTypes.bool,
     scrollX: PropTypes.bool,
     listenScroll: PropTypes.bool,
-    pullupFunc: PropTypes.func
+    pullupFunc: PropTypes.func,
+    scrollFunc: PropTypes.func
 }

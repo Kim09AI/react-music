@@ -75,10 +75,11 @@ class Server {
         })
     }
 
-    getRadioProgram(rid) {
+    getRadioProgram(rid, limit = 60) {
         return axios.get('/dj/program', {
             params: {
-                rid
+                rid,
+                limit
             }
         })
     }

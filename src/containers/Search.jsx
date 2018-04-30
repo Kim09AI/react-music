@@ -25,11 +25,11 @@ class Search extends React.Component {
             currentIndex: 0,
             tabs: [
                 { text: '单曲', type: 1, list: [], count: 0, component: SongList },
+                { text: '歌单', type: 1000, list: [], count: 0, component: PlayList, path: '/playlistDetail' },
+                { text: '电台', type: 1009, list: [], count: 0, component: RadioList, path: '/radioDetail' },
                 { text: '视频', type: 1004, list: [], count: 0, component: MvList },
                 { text: '歌手', type: 100, list: [], count: 0, component: ArtistList },
-                { text: '专辑', type: 10, list: [], count: 0, component: AlbumList },
-                { text: '歌单', type: 1000, list: [], count: 0, component: PlayList },
-                { text: '电台', type: 1009, list: [], count: 0, component: RadioList }
+                { text: '专辑', type: 10, list: [], count: 0, component: AlbumList }
             ]
         }
     }
@@ -143,6 +143,16 @@ class Search extends React.Component {
         }, 0)
     }
 
+    itemClick(row, col) {
+        let path = this.state.tabs[col].path
+        if (!path) {
+            return
+        }
+
+        let id = this.state.tabs[col].list[row].id
+        this.props.history.push(path + '/' + id)
+    }
+
     resetState() {
         let tabs = this.state.tabs.map(item => ({
             ...item,
@@ -177,7 +187,7 @@ class Search extends React.Component {
                         <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === index })} key={item.type}>
                             <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType}>
                                 <div>
-                                    <item.component list={item.list} />
+                                    <item.component list={item.list} onContentClick={(row) => this.itemClick(row, index)} />
                                     <Loading complete={item.list.length !== 0 && item.list.length >= item.count} show={currentIndex === index && loading === true} />
                                 </div>
                             </Scroll>

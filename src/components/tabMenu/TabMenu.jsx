@@ -27,7 +27,7 @@ export default class TabMenu extends React.Component {
                         </span>
                     ))
                 }
-                <div className="underline" style={{width: `${100 / tabs.length}%`, transform: `translateX(${currentIndex * 100}%)`}}></div>
+                <div className="underline" style={{ width: `${100 / tabs.length}%`, transform: `translateX(${currentIndex * 100}%)` }}></div>
             </div>
         )
     }

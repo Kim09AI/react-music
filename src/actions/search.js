@@ -13,13 +13,11 @@ const searchTypeQuery = {
             }
             album {
                 name
-                picId
+                picUrl
                 size
             }
             duration
-            mvid
-            rtype
-            ftype
+            fee
         }
     }`,
     1004: `... on MvResult {

@@ -40,6 +40,9 @@ export const User = new GraphQLObjectType({
         "backgroundImgId": {
             type: GraphQLID
         }, 
+        "rewardCount": {
+            type: GraphQLInt
+        },
         "authority": {
             type: GraphQLInt
         }, 
