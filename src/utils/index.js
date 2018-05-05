@@ -55,3 +55,15 @@ export function dateFormat(fmt, date = new Date()) {
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
+export function distinctList(list, obj, fn) {
+    let index = list.findIndex(fn)
+    if (index === -1) {
+        return list
+    }
+
+    let _list = list.slice()
+    _list.splice(index, 1)
+
+    return _list
+}

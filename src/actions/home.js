@@ -5,6 +5,7 @@ export const getHomeData = () => ({
     types: {
         successType: types.GET_HOME_DATA
     },
+    shouldCallAPI: state => Object.keys(state.homeData.banners).length === 0,
     callAPI: () => axios.get('/graphql', {
         params: {
             query: `query {

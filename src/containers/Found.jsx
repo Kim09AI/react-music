@@ -25,7 +25,7 @@ class Found extends React.Component {
                 <div>
                     <Swipe>
                         {
-                            banners && banners.map((banner, index) => (
+                            banners.map((banner, index) => (
                                 <div className="item" key={index}>
                                     <div className="pic" style={{ backgroundImage: `url(${banner.pic})`}}></div>
                                     <span className="theme" style={{ backgroundColor: banner.titleColor }}>{banner.typeTitle}</span>
@@ -60,7 +60,7 @@ class Found extends React.Component {
                         </div>
                     </div>
                     {
-                        personalized && <ThumbnailList onClick={(index) => this.onItemClick(index)} title="推荐歌单" list={personalized} showNum={9} />
+                        <ThumbnailList onClick={(index) => this.onItemClick(index)} title="推荐歌单" list={personalized} showNum={9} />
                     }
                 </div>
             </Scroll>

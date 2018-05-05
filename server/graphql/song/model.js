@@ -9,48 +9,7 @@ import {
 } from 'graphql'
 import { Artist } from '../artist/model'
 import { Album } from '../album/model'
-
-export const Music = new GraphQLObjectType({
-    name: 'Music',
-    fields: {
-        "br": {
-            type: GraphQLInt
-        }, 
-        "fid": {
-            type: GraphQLID
-        }, 
-        "size": {
-            type: GraphQLInt
-        }, 
-        "vd": {
-            type: GraphQLFloat
-        },
-        "name": {
-            type: GraphQLString
-        }, 
-        "id": {
-            type: GraphQLID
-        }, 
-        "extension": {
-            type: GraphQLString
-        }, 
-        "sr": {
-            type: GraphQLInt
-        }, 
-        "dfsId": {
-            type: GraphQLID
-        }, 
-        "bitrate": {
-            type: GraphQLInt
-        }, 
-        "playTime": {
-            type: GraphQLInt
-        }, 
-        "volumeDelta": {
-            type: GraphQLFloat
-        }
-    }
-})
+import { Music } from '../music/model'
 
 export const Song = new GraphQLObjectType({
     name: 'Song',

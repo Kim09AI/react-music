@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import routeConfig from './routes'
 import Slidebar from './components/slidebar/Slidebar'
+import Play from './containers/Play'
 
 /**
  * 根据路由配置生成相应路由
@@ -38,6 +39,7 @@ class App extends Component {
                     </Switch>
                 </Router>
                 <Slidebar />
+                <Play />
             </div>
         )
     }

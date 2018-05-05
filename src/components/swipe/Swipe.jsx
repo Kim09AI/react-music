@@ -35,7 +35,7 @@ export default class Swipe extends React.Component {
     }
 
     render() {
-        if (!this.props.children) {
+        if (!this.props.children || !this.props.children.length) {
             return null
         }
 

@@ -15,3 +15,13 @@ export const GET_RADIO = 'GET_RADIO'
 export const GET_RADIO_DETAIL = 'GET_RADIO_DETAIL'
 
 export const GET_PLAT_LIST = 'GET_PLAT_LIST'
+
+export const ADD_MUSIC = 'ADD_MUSIC'
+
+export const REMOVE_MUSIC = 'REMOVE_MUSIC'
+
+export const PREV_MUSIC = 'PREV_MUSIC'
+
+export const NEXT_MUSIC = 'NEXT_MUSIC'
+
+export const SWITCH_MUSIC = 'SWITCH_MUSIC'

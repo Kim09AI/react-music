@@ -83,6 +83,14 @@ class Server {
             }
         })
     }
+
+    getMusicUrl(id) {
+        return axios.get('/music/url', {
+            params: {
+                id
+            }
+        })
+    }
 }
 
 export default new Server()

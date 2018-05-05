@@ -24,8 +24,7 @@ class RadioDetail extends React.Component {
     }
 
     componentDidMount() {
-        let id = this.props.match.params.id
-        this.props.getRadioDetail(id)
+        this.getRadioDetail()
     }
 
     componentWillReceiveProps(nextProps) {
@@ -42,6 +41,16 @@ class RadioDetail extends React.Component {
             this.tabToggle = false
             this.scroll.refresh()
         }
+    }
+
+    getRadioDetail() {
+        let radioDetail = this.state.radioDetail
+        if (Object.keys(radioDetail).length) {
+            return
+        }
+
+        let id = this.props.match.params.id
+        this.props.getRadioDetail(id)
     }
 
     tabSwitch(index) {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import './songList.styl'
 
 function SongList(props) {
-    let { list, showRank } = props
+    let { list, showRank, onContentClick } = props
 
     return (
         <div className="song-list">
@@ -13,7 +13,7 @@ function SongList(props) {
                         {
                             showRank && <span className="rank">{index + 1}</span>
                         }
-                        <div className="song">
+                        <div className="song" onClick={() => onContentClick(index)}>
                             <div className="name">{item.name}</div>
                             <div className="info">
                                 <span className="quality">SQ</span>
@@ -32,7 +32,8 @@ function SongList(props) {
 
 SongList.propTypes = {
     list: PropTypes.arrayOf(PropTypes.object).isRequired,
-    showRank: PropTypes.bool
+    showRank: PropTypes.bool,
+    onContentClick: PropTypes.func.isRequired
 }
 
 export default SongList

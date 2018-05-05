@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import SongList from 'components/songList/SongList'
 import Scroll from '../components/scroll/Scroll'
 import { getPlayList } from '../actions/playList'
+import { addMusic } from '../actions/music'
 import { numFormat } from 'utils/index'
+import Music from '../utils/music'
+import axios from '../utils/axios'
 import './playlistDetail.styl'
 
 class PlaylistDetail extends React.Component {
@@ -37,6 +40,35 @@ class PlaylistDetail extends React.Component {
 
         let id = this.state.id
         this.props.getPlayList(id)
+    }
+
+    async playMusic(index) {
+        let song = this.state.playList.tracks[index]
+        try {
+            let res = await axios.get('/graphql', {
+                params: {
+                    query: `query {
+                        music(id: ${song.id}) {
+                            id
+                            url
+                        }
+                    }`
+                }
+            })
+            
+            let music = new Music({
+                name: song.name,
+                id: song.id,
+                duration: song.duration,
+                artistName: song.artists[0].name,
+                picUrl: song.album.picUrl,
+                url: res.data.music.url
+            })
+
+            this.props.addMusic(music)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     render() {
@@ -106,7 +138,7 @@ class PlaylistDetail extends React.Component {
                                             <span>多选</span>
                                         </div>
                                     </div>
-                                    <SongList list={playList.tracks} showRank />
+                                    <SongList list={playList.tracks} showRank onContentClick={(index) => this.playMusic(index)} />
                                 </div>
                             </Scroll>
                         )
@@ -121,4 +153,4 @@ const mapStateToProps = state => ({
     playList: state.playList
 })
 
-export default connect(mapStateToProps, { getPlayList })(PlaylistDetail)
+export default connect(mapStateToProps, { getPlayList, addMusic })(PlaylistDetail)

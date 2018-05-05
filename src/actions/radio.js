@@ -5,6 +5,7 @@ export const getRadio = () => ({
     types: {
         successType: types.GET_RADIO
     },
+    shouldCallAPI: state => Object.keys(state.radio.radioRecommends).length === 0,
     callAPI: () => axios.get('/graphql', {
         params: {
             query: `query {

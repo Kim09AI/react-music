@@ -10,7 +10,7 @@ import {
 import { User } from '../user/model'
 import { Artists } from '../artist/model'
 import { Album } from '../album/model'
-import { Music } from '../song/model'
+import { Music } from '../music/model'
 
 const Track = new GraphQLObjectType({
     name: 'Track',
