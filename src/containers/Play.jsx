@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { prevMusic, nextMusic, switchMusic, removeMusic } from '../actions/music'
 import MiniPlay from 'components/miniPlay/MiniPlay'
 import MusicList from 'components/musicList/MusicList'
+import FullPlay from 'components/fullPlay/FullPlay'
 
 class Play extends React.Component {
     constructor(props) {
@@ -112,7 +113,7 @@ class Play extends React.Component {
 
     render() {
         let { paused, currentTime, showList } = this.state
-        let { currentIndex, originList, currentList, showPlay, removeMusic } = this.props
+        let { currentIndex, originList, currentList, showPlay, removeMusic, prevMusic, nextMusic } = this.props
 
         if (!showPlay) {
             return null
@@ -127,6 +128,15 @@ class Play extends React.Component {
                     showMusicList={() => this.toggleMusicList()}
                     togglePlay={() => this.togglePlay()} 
                     swipe={(e) => this.swipe(e)}
+                />
+                <FullPlay
+                    music={currentList[currentIndex]} 
+                    paused={paused} 
+                    percentage={currentTime / currentList[currentIndex].duration * 1000} 
+                    showMusicList={() => this.toggleMusicList()}
+                    togglePlay={() => this.togglePlay()} 
+                    prevMusic={() => prevMusic()}
+                    nextMusic={() => nextMusic()}
                 />
                 {
                     !!currentList.length && <audio ref={audio => this.audio = audio} src={currentList[currentIndex].url} autoPlay></audio>

@@ -1,0 +1,123 @@
+.full-play-wrapper
+    position: fixed
+    top: 0
+    left 0
+    right 0
+    bottom: 0
+    z-index: 100
+    background-color rgb(127, 127, 127)
+    .bg
+        background-repeat: no-repeat
+        background-position: center
+        background-size auto 100%
+        filter: blur(35px)
+        position: absolute
+        top: 0
+        left 0
+        right 0
+        bottom: 0
+        z-index: -1
+    .play-header
+        display: flex
+        align-items: center
+        height 50px
+        position relative
+        padding: 0 10px 0 15px
+        color: #ffffff
+        &:after
+            content: ''
+            position: absolute
+            left 0
+            right 0
+            bottom: 0
+            height 1px
+            background: linear-gradient(90deg, rgba(220, 220, 220, 0), #ffffff, rgba(220, 220, 220, 0))
+            transform: scaleY(0.2)
+        .content
+            flex: 1
+            overflow hidden
+            margin-left: 15px
+            .name
+                overflow hidden
+                white-space nowrap
+                text-overflow: ellipsis
+            .artist-name
+                font-size: 12px
+                color: #e2e2e2
+                margin-top: 5px
+        .shape
+            margin-left: 10px
+            font-size: 20px
+    .music-turn-wrapper
+        position relative
+        padding-top: 20%
+        .music-turn-bg
+            width: 70%
+            height 0
+            padding-top: 70%
+            margin: 0 auto
+            background: url(http://s3.music.126.net/m/s/img/disc.png?d3bdd1080a72129346aa0b4b4964b75f) no-repeat
+            background-size contain
+            position relative
+            .music-turn
+                position: absolute
+                width: 61%
+                height: 61%
+                top: 0
+                left 0
+                right 0
+                bottom: 0
+                margin: auto
+                border-radius: 50%
+                animation: rotate 14s linear infinite
+                &.active
+                    animation-play-state: paused;
+        .dist
+            background: url(http://s3.music.126.net/m/s/img/needle.png?702cf6d95f29e2e594f53a3caab50e12) no-repeat
+            background-size contain
+            position: absolute
+            top: 0
+            left 42%
+            width: 30%
+            height 42%
+            z-index 1
+    .control-wrapper
+        position: absolute
+        left 0
+        right 0
+        bottom: 0
+        padding-bottom: 30px
+        .other-control
+            text-align: center
+            justify-content: space-around
+            display: flex
+            padding: 0 50px
+            color: #e6e6e6
+            .iconfont
+                font-size 19px
+        .play-control
+            color: #e6e6e6
+            display: flex
+            align-items: center
+            justify-content: space-around
+            padding: 0 15px
+            margin-top: 25px
+            .iconfont
+                font-size 19px
+            .play-btn
+                border: 1px solid #e6e6e6
+                border-radius: 50%
+                width: 35px
+                height: 35px
+                .iconfont
+                    position relative
+                    top: 8.5px
+                    left 7.5px
+                .paused
+                    left 9px
+        
+@keyframes rotate
+    from
+        transform: rotate(0)
+    to
+        transform: rotate(360deg)

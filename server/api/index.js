@@ -1,6 +1,6 @@
 import axios from '../utils/axios'
 
-class Server {
+class Service {
     getBanner() {
         return axios.get('/banner')
     }
@@ -93,4 +93,4 @@ class Server {
     }
 }
 
-export default new Server()
+export default new Service()
