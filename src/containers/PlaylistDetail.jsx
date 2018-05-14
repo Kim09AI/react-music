@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import SongList from 'components/songList/SongList'
 import Scroll from '../components/scroll/Scroll'
-import { getPlayList } from '../actions/playList'
+import api from 'api'
 import { addMusic } from '../actions/music'
 import { numFormat } from 'utils/index'
 import Music from '../utils/music'
@@ -12,11 +12,9 @@ import './playlistDetail.styl'
 class PlaylistDetail extends React.Component {
     constructor(props) {
         super(props)
-
-        let id = this.props.match.params.id
         this.state = {
-            id: id,
-            playList: props.playList.id === id ? props.playList : {}
+            id: this.props.match.params.id,
+            playList: {}
         }
     }
 
@@ -24,22 +22,16 @@ class PlaylistDetail extends React.Component {
         this.getPlayList()
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.playList.id === this.state.id) {
+    async getPlayList() {
+        try {
+            let res = await api.getPlayList(this.state.id)
+
             this.setState({
-                playList: nextProps.playList
+                playList: res.data.playList
             })
+        } catch (e) {
+            console.log(e)
         }
-    }
-
-    getPlayList() {
-        let playList = this.state.playList
-        if (Object.keys(playList).length) {
-            return
-        }
-
-        let id = this.state.id
-        this.props.getPlayList(id)
     }
 
     async playMusic(index) {
@@ -149,8 +141,4 @@ class PlaylistDetail extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    playList: state.playList
-})
-
-export default connect(mapStateToProps, { getPlayList, addMusic })(PlaylistDetail)
+export default connect(null, { addMusic })(PlaylistDetail)

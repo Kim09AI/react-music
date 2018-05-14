@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './progressBar.styl'
 
+const pointW = 10
+
 export default class ProgressBar extends React.Component {
     constructor(props) {
         super(props)
@@ -11,7 +13,8 @@ export default class ProgressBar extends React.Component {
 
         this.touchStart = this.touchStart.bind(this)
         this.touchMove = this.touchMove.bind(this)
-        this.touchEnd = this.touchEnd.bind(this)        
+        this.touchEnd = this.touchEnd.bind(this)  
+        this.refresh = this.refresh.bind(this)      
     }
 
     componentDidMount() {
@@ -19,7 +22,7 @@ export default class ProgressBar extends React.Component {
     }
 
     componentWillReceiveProps(nextProps, props) {
-        if (nextProps.percentage !== props.percentage && true) {
+        if (!this.isTouch && nextProps.percentage !== props.percentage) {
             this.setState({
                 percentage: nextProps.percentage
             })
@@ -27,36 +30,80 @@ export default class ProgressBar extends React.Component {
     }
 
     componentWillUnmount() {
-        this.point.removeEventListener('touchstart', this.touchStart)
-        this.point.removeEventListener('touchstart', this.touchMove)
-        this.point.removeEventListener('touchstart', this.touchEnd)
+        this.destoryEvents()
     }
 
     initEvents() {
         this.point.addEventListener('touchstart', this.touchStart)
-        this.point.addEventListener('touchstart', this.touchMove)
-        this.point.addEventListener('touchstart', this.touchEnd)
+        this.point.addEventListener('touchmove', this.touchMove)
+        this.point.addEventListener('touchend', this.touchEnd)
+        window.addEventListener('resize', this.refresh)
     }
 
-    touchStart() {
-
+    destoryEvents() {
+        this.point.removeEventListener('touchstart', this.touchStart)
+        this.point.removeEventListener('touchmove', this.touchMove)
+        this.point.removeEventListener('touchend', this.touchEnd)
+        window.removeEventListener('resize', this.refresh)
     }
 
-    touchMove() {
+    progressBarClick(e) {
+        let pageX = e.pageX
+        let { left, width } = e.target.getBoundingClientRect()
+        let offsetX = pageX - left - pointW
+        let progressW = width - pointW
+        let percentage = offsetX / progressW
 
+        this.setState({
+            percentage
+        })
+        
+        this.props.percentageChangeFunc(percentage)
+    }
+
+    touchStart(e) {
+        let startX = e.changedTouches[0].pageX
+
+        this.isTouch = true
+        this.startX = startX
+        this.startPercentage = this.state.percentage
+    }
+
+    touchMove(e) {
+        if (!this.isTouch) {
+            return
+        }
+
+        let moveX = e.changedTouches[0].pageX
+        let diffX = moveX - this.startX
+        let width = this.progressBar.getBoundingClientRect().width - pointW
+        let offsetX = Math.min(Math.max(width * this.startPercentage + diffX, 0), width)
+
+        this.setState({
+            percentage: offsetX / width
+        })
     }
 
     touchEnd() {
+        this.isTouch = false
+        this.props.percentageChangeFunc(this.state.percentage)
+    }
 
+    refresh() {
+        this.forceUpdate()
     }
 
     render() {
-        let { percentage, percentageChangeFunc } = this.props
+        let { percentage } = this.state
+        let offsetX = 0
+        if (this.progressBar) {
+            offsetX = (this.progressBar.getBoundingClientRect().width - pointW) * percentage
+        }
     
         return (
-            <div className="progress-bar-wrapper">
-                <div className="percentage"></div>
-                <span className="point" ref={point => this.point = point}></span>
+            <div className="progress-bar-wrapper" onClick={(e) => this.progressBarClick(e)} ref={progressBar => this.progressBar = progressBar}>
+                <div className="percentage" style={{ width: `${offsetX}px`}}></div>
+                <span className="point" style={{ transform: `translateX(${offsetX}px)`, '-webkit-transform': `translateX(${offsetX}px)` }} ref={point => this.point = point}></span>
             </div>
         )
     }

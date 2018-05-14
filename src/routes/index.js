@@ -40,7 +40,7 @@ const routeConfig = [
         component: PlaylistDetail
     },
     {
-        path: '/radioDetail/:id',
+        path: '/radioDetail/:rid',
         component: RadioDetail
     }
 ]

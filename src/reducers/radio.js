@@ -14,12 +14,6 @@ const radio = createReducer(initialState, {
             ...state,
             ...action.response
         }
-    },
-    [types.GET_RADIO_DETAIL](state, action) {
-        return {
-            ...state,
-            ...action.response
-        }
     }
 })
 

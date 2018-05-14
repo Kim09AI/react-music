@@ -5,18 +5,11 @@ import storage from 'good-storage'
 const SEARCH_HISTORY_KEY = 'searchHistoryKey'
 
 const initialState = {
-    searchResult: {},
     searchSuggest: {},
     history: storage.get(SEARCH_HISTORY_KEY, [])
 }
 
 const searchInfo = createReducer(initialState, {
-    [types.SEARCH](state, action) {
-        return {
-            ...state,
-            searchResult: action.response.searchResult
-        }
-    },
     [types.GET_SEARCH_SUGGEST](state, action) {
         return {
             ...state,

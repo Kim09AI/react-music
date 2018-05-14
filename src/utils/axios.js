@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+axios.defaults.baseURL = '/graphql'
+
 axios.interceptors.response.use(res => {
     return res && res.data
 }, err => {

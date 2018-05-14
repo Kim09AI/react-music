@@ -1,11 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import BScroll from 'better-scroll'
+import { debounce } from 'utils'
 import './scroll.styl'
 
 export default class Scroll extends React.Component {
     componentDidMount() {
         this.initScroll()
+
+        this.resizeRefresh = debounce(this.refresh)
+        window.addEventListener('resize', this.resizeRefresh)
     }
 
     componentDidUpdate() {
@@ -14,6 +18,7 @@ export default class Scroll extends React.Component {
 
     componentWillUnmount() {
         this.scroll.destroy()
+        window.removeEventListener('resize', this.resizeRefresh)
     }
 
     initScroll() {

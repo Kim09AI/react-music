@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { search, getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
+import api from 'api'
+import { getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
 import HistoryList from 'components/historyList/HistoryList'
 import TabMenu from 'components/tabMenu/TabMenu'
 import Scroll from 'components/scroll/Scroll'
@@ -38,28 +39,6 @@ class Search extends React.Component {
         this.state.isSearchResultPage && this.loadSearchResult()
     }
 
-    componentWillReceiveProps(nextProps, props) {
-        if (nextProps.searchResult !== props.searchResult) {
-            if (!nextProps.searchResult.list || nextProps.searchResult.list.length === 0) {
-                return
-            }
-
-            let { currentIndex, tabs } = this.state
-            let item = tabs[currentIndex]
-
-            tabs = [...tabs]
-            tabs.splice(currentIndex, 1, {
-                ...item,
-                list: item.list.concat(nextProps.searchResult.list),
-                count: nextProps.searchResult.count
-            })
-
-            this.setState({
-                tabs: tabs
-            })
-        }
-    }
-
     async loadSearchResult() {
         let { keywords, currentIndex, tabs } = this.state
         let offset = tabs[currentIndex].list.length
@@ -78,7 +57,24 @@ class Search extends React.Component {
             loading: true
         })
 
-        await this.props.search({ keywords, type: tabs[currentIndex].type, offset })
+        try {
+            let res = await api.search({ keywords, type: tabs[currentIndex].type, offset })
+
+            let item = tabs[currentIndex]
+
+            tabs = [...tabs]
+            tabs.splice(currentIndex, 1, {
+                ...item,
+                list: item.list.concat(res.data.searchResult.list),
+                count: res.data.searchResult.count
+            })
+
+            this.setState({
+                tabs: tabs
+            })
+        } catch (e) {
+            console.log(e)
+        }
 
         this.setState({
             loading: false
@@ -137,6 +133,9 @@ class Search extends React.Component {
         this.setState({
             currentIndex: index
         })
+
+        // 保存tab状态
+        // this.props.history.push()
 
         setTimeout(() => {
             tab.list.length === 0 && this.loadSearchResult()
@@ -202,13 +201,11 @@ class Search extends React.Component {
 const mapStateToProps = state => {
     let search = state.search
     return {
-        searchResult: search.searchResult,
         searchHistory: search.history
     }
 }
 
 const mapDispatchToProps = {
-    search,
     getSearchSuggest,
     addSearchHistory,
     rmSearchHistory

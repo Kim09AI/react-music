@@ -92,6 +92,7 @@ module.exports = {
       containers: path.resolve(__dirname, '../src/containers'),
       actions: path.resolve(__dirname, '../src/actions'),
       utils: path.resolve(__dirname, '../src/utils'),
+      api: path.resolve(__dirname, '../src/api'),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

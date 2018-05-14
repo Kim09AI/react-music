@@ -67,3 +67,11 @@ export function distinctList(list, obj, fn) {
 
     return _list
 }
+
+export const debounce = function(fn, delay = 100, context) {
+    let timer
+    return (...args) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => fn.apply(context, args), delay)
+    }
+}

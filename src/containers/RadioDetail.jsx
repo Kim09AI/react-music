@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import classNames from 'classnames'
+import api from 'api'
 import Scroll from '../components/scroll/Scroll'
 import CommentList from '../components/commentList/CommentList'
 import ProgramList from '../components/programList/ProgramList'
-import { getRadioDetail } from '../actions/radio'
 import { numFormat } from '../utils/index'
 import './radioDetail.styl'
 
@@ -12,28 +11,16 @@ class RadioDetail extends React.Component {
     constructor(props) {
         super(props)
 
-        let id = this.props.match.params.id
-        let isMatch = props.radioDetail.id === id
-
         this.state = {
-            id,
-            radioDetail: isMatch ? props.radioDetail : {},
-            radioPrograms: isMatch ? props.radioPrograms : [],
+            rid: this.props.match.params.rid,
+            radioDetail: {},
+            radioPrograms: [],
             currentIndex: 0
         }
     }
 
     componentDidMount() {
         this.getRadioDetail()
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.radioDetail.id === this.state.id) {
-            this.setState({
-                radioDetail: nextProps.radioDetail,
-                radioPrograms: nextProps.radioPrograms
-            })
-        }
     }
 
     componentDidUpdate() {
@@ -43,14 +30,17 @@ class RadioDetail extends React.Component {
         }
     }
 
-    getRadioDetail() {
-        let radioDetail = this.state.radioDetail
-        if (Object.keys(radioDetail).length) {
-            return
-        }
+    async getRadioDetail() {
+        try {
+            let res = await api.getRadioDetail(this.state.rid)
 
-        let id = this.props.match.params.id
-        this.props.getRadioDetail(id)
+            this.setState({
+                radioDetail: res.data.radioDetail,
+                radioPrograms: res.data.radioPrograms
+            })
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     tabSwitch(index) {
@@ -149,9 +139,4 @@ class RadioDetail extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    radioDetail: state.radio.radioDetail,
-    radioPrograms: state.radio.radioPrograms
-})
-
-export default connect(mapStateToProps, { getRadioDetail })(RadioDetail)
+export default RadioDetail
