@@ -12,7 +12,8 @@ class Play extends React.Component {
             paused: true,
             currentTime: 0,
             initSuccess: false,
-            showList: false
+            showList: false,
+            showMiniPlay: true
         }
     }
     
@@ -94,6 +95,12 @@ class Play extends React.Component {
         })
     }
 
+    toggleMusicPlay() {
+        this.setState({
+            showMiniPlay: !this.state.showMiniPlay
+        })
+    }
+
     switchMusic(id) {
         let currentMusic = this.props.currentList[this.props.currentIndex]
         if (currentMusic.id === id) {
@@ -111,8 +118,14 @@ class Play extends React.Component {
         }
     }
 
+    percentageChangeFunc(percentage) {
+        let { currentIndex, currentList } = this.props
+        let duration = currentList[currentIndex].duration / 1000
+        this.audio.currentTime = duration * percentage
+    }
+
     render() {
-        let { paused, currentTime, showList } = this.state
+        let { paused, currentTime, showList, showMiniPlay } = this.state
         let { currentIndex, originList, currentList, showPlay, removeMusic, prevMusic, nextMusic } = this.props
 
         if (!showPlay) {
@@ -128,15 +141,21 @@ class Play extends React.Component {
                     showMusicList={() => this.toggleMusicList()}
                     togglePlay={() => this.togglePlay()} 
                     swipe={(e) => this.swipe(e)}
+                    contentClick={() => this.toggleMusicPlay()}
                 />
                 <FullPlay
                     music={currentList[currentIndex]} 
                     paused={paused} 
                     percentage={currentTime / currentList[currentIndex].duration * 1000} 
+                    show={!showMiniPlay}
                     showMusicList={() => this.toggleMusicList()}
                     togglePlay={() => this.togglePlay()} 
                     prevMusic={() => prevMusic()}
                     nextMusic={() => nextMusic()}
+                    currentTime={currentTime * 1000}
+                    duration={currentList[currentIndex].duration}
+                    percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)}
+                    goBackFunc={() => this.toggleMusicPlay()}
                 />
                 {
                     !!currentList.length && <audio ref={audio => this.audio = audio} src={currentList[currentIndex].url} autoPlay></audio>

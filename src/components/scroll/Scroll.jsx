@@ -5,6 +5,11 @@ import { debounce } from 'utils'
 import './scroll.styl'
 
 export default class Scroll extends React.Component {
+    constructor(props) {
+        super(props)
+        this.refresh = this.refresh.bind(this)
+    }
+
     componentDidMount() {
         this.initScroll()
 

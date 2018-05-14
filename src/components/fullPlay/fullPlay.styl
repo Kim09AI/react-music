@@ -45,6 +45,7 @@
                 font-size: 12px
                 color: #e2e2e2
                 margin-top: 5px
+                line-height: 1.2
         .shape
             margin-left: 10px
             font-size: 20px
@@ -81,6 +82,12 @@
             width: 30%
             height 42%
             z-index 1
+            transition: all 0.3s
+            transform: rotate(-25deg)
+            transform-origin: 15px 0
+            &.active
+                transform: rotate(0)
+                
     .control-wrapper
         position: absolute
         left 0
@@ -95,6 +102,16 @@
             color: #e6e6e6
             .iconfont
                 font-size 19px
+        .progressbar-wrapper
+            display: flex
+            padding: 0 20px
+            margin-top: 25px
+            color: #e2e2e2
+            font-size: 12px
+            align-items: center
+            .progress
+                flex: 1
+                padding: 0 10px
         .play-control
             color: #e6e6e6
             display: flex
@@ -112,9 +129,9 @@
                 .iconfont
                     position relative
                     top: 8.5px
-                    left 7.5px
+                    left 8px
                 .paused
-                    left 9px
+                    left 9.5px
         
 @keyframes rotate
     from

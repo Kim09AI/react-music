@@ -279,6 +279,19 @@ class Service {
             }
         })
     }
+
+    getMusic(id) {
+        return axios.get('/', {
+            params: {
+                query: `query {
+                    music(id: ${id}) {
+                        id
+                        url
+                    }
+                }`
+            }
+        })
+    }
 }
 
 export default new Service()

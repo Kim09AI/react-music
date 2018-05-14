@@ -4,7 +4,7 @@ import Hammer from 'react-hammerjs'
 import './miniPlay.styl'
 
 export default function MiniPlay(props) {
-    let { music, togglePlay, paused, borderW, r, percentage, showMusicList, swipe } = props
+    let { music, togglePlay, paused, borderW, r, percentage, showMusicList, swipe, contentClick } = props
 
     let borderR = borderW + r
     let width = borderR * 2
@@ -13,7 +13,7 @@ export default function MiniPlay(props) {
     return (
         <div className="mini-play-wrapper">
             <img className="icon" src={music.picUrl} alt=""/>
-            <div className="content">
+            <div className="content" onClick={() => contentClick()}>
                 <Hammer onSwipe={(e) => swipe(e)}>
                     <div>
                         <div className="name">{music.name}</div>
@@ -48,9 +48,11 @@ MiniPlay.propTypes = {
         picUrl: PropTypes.string,
         url: PropTypes.string
     }),
+    show: PropTypes.bool,
     togglePlay: PropTypes.func,
     paused: PropTypes.bool,
     percentage: PropTypes.number,
     showMusicList: PropTypes.func,
-    swipe: PropTypes.func
+    swipe: PropTypes.func,
+    contentClick: PropTypes.func
 }

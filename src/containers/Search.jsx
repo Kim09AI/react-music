@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import api from 'api'
+import Music from '../utils/music'
+import { addMusic } from '../actions/music'
 import { getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
 import HistoryList from 'components/historyList/HistoryList'
 import TabMenu from 'components/tabMenu/TabMenu'
@@ -18,14 +20,16 @@ import './search.styl'
 class Search extends React.Component {
     constructor(props) {
         super(props)
+
+        let matched = this.props.location.search.match(/\d/)
         this.state = {
             probeType: 2,
             keywords: this.props.match.params.keywords || '',
             isSearchResultPage: !!this.props.match.params.keywords,
             loading: false,
-            currentIndex: 0,
+            currentIndex: (matched && +matched[0]) || 0,
             tabs: [
-                { text: '单曲', type: 1, list: [], count: 0, component: SongList },
+                { text: '单曲', type: 1, list: [], count: 0, component: SongList, handler: 'playMusic' },
                 { text: '歌单', type: 1000, list: [], count: 0, component: PlayList, path: '/playlistDetail' },
                 { text: '电台', type: 1009, list: [], count: 0, component: RadioList, path: '/radioDetail' },
                 { text: '视频', type: 1004, list: [], count: 0, component: MvList },
@@ -135,7 +139,7 @@ class Search extends React.Component {
         })
 
         // 保存tab状态
-        // this.props.history.push()
+        this.props.history.replace(`${this.props.match.url}?index=${index}`)
 
         setTimeout(() => {
             tab.list.length === 0 && this.loadSearchResult()
@@ -143,13 +147,36 @@ class Search extends React.Component {
     }
 
     itemClick(row, col) {
-        let path = this.state.tabs[col].path
-        if (!path) {
+        let { path, handler } = this.state.tabs[col]
+        if (path) {
+            let id = this.state.tabs[col].list[row].id
+            this.props.history.push(path + '/' + id)
             return
         }
 
-        let id = this.state.tabs[col].list[row].id
-        this.props.history.push(path + '/' + id)
+        if (handler) {
+            this[handler](row)
+        }
+    }
+
+    async playMusic(index) {
+        let song = this.state.tabs[0].list[index]
+        try {
+            let res = await api.getMusic(song.id)
+            
+            let music = new Music({
+                name: song.name,
+                id: song.id,
+                duration: song.duration,
+                artistName: song.artists[0].name,
+                picUrl: song.album.picUrl || '/images/notFound.jpg',
+                url: res.data.music.url
+            })
+
+            this.props.addMusic(music)
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     resetState() {
@@ -158,10 +185,12 @@ class Search extends React.Component {
             list: [],
             count: 0
         }))
+
+        let matched = this.props.location.search.match(/\d/)
         
         this.setState({
             tabs,
-            currentIndex: 0
+            currentIndex: (matched && +matched[0]) || 0
         })
     }
 
@@ -208,7 +237,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
     getSearchSuggest,
     addSearchHistory,
-    rmSearchHistory
+    rmSearchHistory,
+    addMusic
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search)

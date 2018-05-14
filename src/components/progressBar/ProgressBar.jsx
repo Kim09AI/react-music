@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './progressBar.styl'
 
-const pointW = 10
+const pointW = 14
 
 export default class ProgressBar extends React.Component {
     constructor(props) {
@@ -49,7 +49,7 @@ export default class ProgressBar extends React.Component {
 
     progressBarClick(e) {
         let pageX = e.pageX
-        let { left, width } = e.target.getBoundingClientRect()
+        let { left, width } = this.progressBar.getBoundingClientRect()
         let offsetX = pageX - left - pointW
         let progressW = width - pointW
         let percentage = offsetX / progressW
@@ -103,7 +103,7 @@ export default class ProgressBar extends React.Component {
         return (
             <div className="progress-bar-wrapper" onClick={(e) => this.progressBarClick(e)} ref={progressBar => this.progressBar = progressBar}>
                 <div className="percentage" style={{ width: `${offsetX}px`}}></div>
-                <span className="point" style={{ transform: `translateX(${offsetX}px)`, '-webkit-transform': `translateX(${offsetX}px)` }} ref={point => this.point = point}></span>
+                <span className="point" style={{ transform: `translateX(${offsetX}px)`, WebkitTransform: `translate(${offsetX}px, -50%)` }} ref={point => this.point = point}></span>
             </div>
         )
     }

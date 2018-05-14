@@ -6,7 +6,6 @@ import api from 'api'
 import { addMusic } from '../actions/music'
 import { numFormat } from 'utils/index'
 import Music from '../utils/music'
-import axios from '../utils/axios'
 import './playlistDetail.styl'
 
 class PlaylistDetail extends React.Component {
@@ -37,16 +36,7 @@ class PlaylistDetail extends React.Component {
     async playMusic(index) {
         let song = this.state.playList.tracks[index]
         try {
-            let res = await axios.get('/graphql', {
-                params: {
-                    query: `query {
-                        music(id: ${song.id}) {
-                            id
-                            url
-                        }
-                    }`
-                }
-            })
+            let res = await api.getMusic(song.id)
             
             let music = new Music({
                 name: song.name,
