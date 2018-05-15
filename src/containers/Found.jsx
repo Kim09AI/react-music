@@ -4,11 +4,16 @@ import Scroll from '../components/scroll/Scroll'
 import Swipe from '../components/swipe/Swipe'
 import ThumbnailList from '../components/thumbnailList/ThumbnailList'
 import { getHomeData } from '../actions/home'
+import { setScrollBottom } from 'utils'
 import './found.styl'
 
 class Found extends React.Component {
     componentDidMount() {
         this.props.getHomeData()
+    }
+
+    componentDidUpdate(prevProps) {
+        setScrollBottom(null, this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     onItemClick(index) {
@@ -21,7 +26,7 @@ class Found extends React.Component {
         let { banners, personalized } = this.props
         
         return (
-            <Scroll>
+            <Scroll ref={scroll => this.scroll = scroll}>
                 <div>
                     <Swipe>
                         {
@@ -70,7 +75,8 @@ class Found extends React.Component {
 
 const mapStateToProps = state => ({
     banners: state.homeData.banners,
-    personalized: state.homeData.personalized
+    personalized: state.homeData.personalized,
+    showPlay: state.music.showPlay
 })
 
 const mapDispatchToProps = {

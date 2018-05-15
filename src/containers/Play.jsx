@@ -4,6 +4,7 @@ import { prevMusic, nextMusic, switchMusic, removeMusic } from '../actions/music
 import MiniPlay from 'components/miniPlay/MiniPlay'
 import MusicList from 'components/musicList/MusicList'
 import FullPlay from 'components/fullPlay/FullPlay'
+import Alert from 'components/alert/Alert'
 
 class Play extends React.Component {
     constructor(props) {
@@ -35,13 +36,7 @@ class Play extends React.Component {
             paused: false
         })
 
-        this.audio.addEventListener('error', (e) => {
-            console.log('播放出错')
-
-            this.setState({
-                paused: true
-            })
-        })
+        this.audio.addEventListener('error', () => this.playError())
 
         this.audio.addEventListener('timeupdate', () => this.timeUpdate())
 
@@ -52,6 +47,19 @@ class Play extends React.Component {
                 paused: false
             })
         })
+    }
+
+    playError() {
+        if (this.props.currentList.length === 1) {
+            this.alert.show('播放出错')
+            this.setState({
+                paused: true
+            })
+            return
+        }
+        
+        this.alert.show('播放出错,自动切换下一首')
+        this.props.nextMusic()
     }
 
     timeUpdate() {
@@ -168,6 +176,7 @@ class Play extends React.Component {
                     hideMusicList={() => this.toggleMusicList()} 
                     removeMusic={(music) => removeMusic(music)}
                 />
+                <Alert ref={alert => this.alert = alert} />
             </div>
         )
     }

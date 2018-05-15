@@ -4,7 +4,7 @@ import SongList from 'components/songList/SongList'
 import Scroll from '../components/scroll/Scroll'
 import api from 'api'
 import { addMusic } from '../actions/music'
-import { numFormat } from 'utils/index'
+import { numFormat, setScrollBottom } from 'utils'
 import Music from '../utils/music'
 import './playlistDetail.styl'
 
@@ -19,6 +19,10 @@ class PlaylistDetail extends React.Component {
 
     componentDidMount() {
         this.getPlayList()
+    }
+
+    componentDidUpdate(prevProps) {
+        setScrollBottom(this.scrollWrapper, this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     async getPlayList() {
@@ -67,10 +71,10 @@ class PlaylistDetail extends React.Component {
                     <i className="iconfont search">&#xe600;</i>
                     <i className="iconfont more">&#xe609;</i>  
                 </div>
-                <div className="play-list-detail-wrapper">
+                <div className="play-list-detail-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
                     {
                         !!Object.keys(playList).length && (
-                            <Scroll>
+                            <Scroll ref={scroll => this.scroll = scroll}>
                                 <div style={{ position: 'relative' }}>
                                     <div className="introduce">
                                         <div className="cover-img">
@@ -131,4 +135,8 @@ class PlaylistDetail extends React.Component {
     }
 }
 
-export default connect(null, { addMusic })(PlaylistDetail)
+const mapStateToProps = state => ({
+    showPlay: state.music.showPlay
+})
+
+export default connect(mapStateToProps, { addMusic })(PlaylistDetail)

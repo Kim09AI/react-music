@@ -14,24 +14,29 @@ export default class Swipe extends React.Component {
 
     next() {
         this.reactSwipe.next()
-        return this.reactSwipe
+        return this
     }
 
     prev() {
         this.reactSwipe.prev()
-        return this.reactSwipe
+        return this
     }
 
     getPos() {
         return this.reactSwipe.getPos()
     }
 
-    callback(...args) {
+    slide(index) {
+        this.reactSwipe.slide(index)
+        return this
+    }
+
+    callback(index, el) {
         this.setState({
-            currentIndex: this.getPos()
+            currentIndex: index
         })
         
-        this.props.callback(...args)
+        this.props.callback(index, el)
     }
 
     render() {

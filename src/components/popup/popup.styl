@@ -1,0 +1,52 @@
+.popup-wrapper
+    position: fixed
+    top: 0
+    left: 0
+    right 0
+    bottom: 0
+    z-index: 998
+    display: flex
+    align-items: center
+    display: none
+    &.active
+        display: block
+    .popup
+        position: relative
+        width: 75%
+        max-width: 300px
+        margin: 0 auto
+        z-index: 1
+        background-color: #ffffff
+        display: none
+        &.active
+            animation scale 0.3s
+            display: block
+        .footer
+            display: flex
+            border-top: 1px solid #e2e2e2
+            .btn
+                flex: 1
+                font-size: 14px
+                color: #cccccc
+                text-align: center
+    .cover
+        position: absolute
+        background-color: rgba(120, 120, 120, 0.6)
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        display: none
+        opacity: 0
+        &.active
+            display: block
+            opacity: 1
+            transition: all 0.3s
+
+@keyframes scale
+    0%
+        transform: scale(0)
+    60%
+        transform: scale(1.1)
+    100%
+        transform: scale(1)

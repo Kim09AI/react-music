@@ -1,10 +1,11 @@
 import React from 'react'
 import classNames from 'classnames'
+import { connect } from 'react-redux'
 import api from 'api'
 import Scroll from '../components/scroll/Scroll'
 import CommentList from '../components/commentList/CommentList'
 import ProgramList from '../components/programList/ProgramList'
-import { numFormat } from '../utils/index'
+import { numFormat, setScrollBottom } from 'utils'
 import './radioDetail.styl'
 
 class RadioDetail extends React.Component {
@@ -23,11 +24,12 @@ class RadioDetail extends React.Component {
         this.getRadioDetail()
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.tabToggle) {
             this.tabToggle = false
             this.scroll.refresh()
         }
+        setScrollBottom(this.scrollWrapper, this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     async getRadioDetail() {
@@ -61,7 +63,7 @@ class RadioDetail extends React.Component {
                     <i className="iconfont shape">&#xe648;</i>
                     <i className="iconfont more">&#xe609;</i>  
                 </div>
-                <div className="radio-detail-wrapper">
+                <div className="radio-detail-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
                     {
                         !!Object.keys(radioDetail).length && (
                             <Scroll ref={scroll => this.scroll = scroll}>
@@ -139,4 +141,8 @@ class RadioDetail extends React.Component {
     }
 }
 
-export default RadioDetail
+const mapStateToProps = state => ({
+    showPlay: state.music.showPlay
+})
+
+export default connect(mapStateToProps)(RadioDetail)

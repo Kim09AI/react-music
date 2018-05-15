@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import api from 'api'
-import Music from '../utils/music'
+import Music from 'utils/music'
+import { setScrollBottom } from 'utils'
 import { addMusic } from '../actions/music'
 import { getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
 import HistoryList from 'components/historyList/HistoryList'
@@ -41,6 +42,12 @@ class Search extends React.Component {
 
     componentDidMount() {
         this.state.isSearchResultPage && this.loadSearchResult()
+    }
+
+    componentDidUpdate(prevProps) {
+        this.state.tabs.forEach((item, index) => {
+            setScrollBottom(this[`scrollWrapper${index}`], this[`scroll${index}`], this.props.showPlay, prevProps.showPlay)
+        })
     }
 
     async loadSearchResult() {
@@ -212,8 +219,8 @@ class Search extends React.Component {
                 }
                 {
                     isSearchResultPage && tabs.map((item, index) => (
-                        <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === index })} key={item.type}>
-                            <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType}>
+                        <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === index })} key={item.type} ref={scrollWrapper => this[`scrollWrapper${index}`] = scrollWrapper}>
+                            <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType} ref={scroll => this[`scroll${index}`] = scroll}>
                                 <div>
                                     <item.component list={item.list} onContentClick={(row) => this.itemClick(row, index)} />
                                     <Loading complete={item.list.length !== 0 && item.list.length >= item.count} show={currentIndex === index && loading === true} />
@@ -227,12 +234,10 @@ class Search extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    let search = state.search
-    return {
-        searchHistory: search.history
-    }
-}
+const mapStateToProps = state => ({
+    searchHistory: state.search.history,
+    showPlay: state.music.showPlay
+})
 
 const mapDispatchToProps = {
     getSearchSuggest,

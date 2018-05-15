@@ -75,3 +75,14 @@ export const debounce = function(fn, delay = 100, context) {
         timer = setTimeout(() => fn.apply(context, args), delay)
     }
 }
+
+export const setScrollBottom = (scrollWrapper, scroll, showPlay, prevShowPlay, bottom = 50) => {
+    if (showPlay === prevShowPlay) {
+        return
+    }
+
+    if (scrollWrapper) {
+        scrollWrapper.style.bottom = showPlay ? `${bottom}px` : 0
+    }
+    scroll && scroll.refresh()
+}

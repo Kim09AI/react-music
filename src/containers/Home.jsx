@@ -1,6 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import CommonHeader from '../components/commonHeader/CommonHeader'
 import TabMenu from '../components/tabMenu/TabMenu'
+import { setScrollBottom } from 'utils'
 import './home.styl'
 
 class Home extends React.Component {
@@ -13,7 +15,11 @@ class Home extends React.Component {
                 { path: '/home/radio', text: '电台' }
             ]
         }
-    } 
+    }
+
+    componentDidUpdate(prevProps) {
+        setScrollBottom(this.scrollWrapper, null, this.props.showPlay, prevProps.showPlay)
+    }
 
     onTabClick(index) {
         let path = this.state.tabs[index].path
@@ -31,7 +37,7 @@ class Home extends React.Component {
             <div>
                 <CommonHeader />
                 <TabMenu tabs={this.state.tabs} currentIndex={this.currentIndex()} onTabClick={(index) => this.onTabClick(index)} />
-                <div className="scroll-wrapper">
+                <div className="scroll-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
                     {/* 添加嵌套路由 */}
                     {this.props.children}
                 </div>
@@ -40,4 +46,8 @@ class Home extends React.Component {
     }
 }
 
-export default Home
+const mapStateToProps = state => ({
+    showPlay: state.music.showPlay
+})
+
+export default connect(mapStateToProps)(Home)
