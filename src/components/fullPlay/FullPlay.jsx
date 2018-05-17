@@ -47,7 +47,7 @@ export default class FullPlay extends React.Component {
     }
 
     lyricHandler({ lineNum }) {
-        console.log(lineNum)
+        // console.log(lineNum)
         this.setState({
             currentLine: lineNum
         })
