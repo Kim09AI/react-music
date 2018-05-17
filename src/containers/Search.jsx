@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import classNames from 'classnames'
 import api from 'api'
 import Music from 'utils/music'
 import { setScrollBottom } from 'utils'
@@ -16,6 +15,8 @@ import AlbumList from 'components/albumList/AlbumList'
 import PlayList from 'components/playList/PlayList'
 import RadioList from 'components/radioList/RadioList'
 import Loading from 'components/loading/Loading'
+import Swipe from 'components/swipe/Swipe'
+import Alert from 'components/alert/Alert'
 import './search.styl'
 
 class Search extends React.Component {
@@ -36,7 +37,8 @@ class Search extends React.Component {
                 { text: '视频', type: 1004, list: [], count: 0, component: MvList },
                 { text: '歌手', type: 100, list: [], count: 0, component: ArtistList },
                 { text: '专辑', type: 10, list: [], count: 0, component: AlbumList }
-            ]
+            ],
+            isReady: false
         }
     }
 
@@ -46,7 +48,7 @@ class Search extends React.Component {
 
     componentDidUpdate(prevProps) {
         this.state.tabs.forEach((item, index) => {
-            setScrollBottom(this[`scrollWrapper${index}`], this[`scroll${index}`], this.props.showPlay, prevProps.showPlay)
+            setScrollBottom(this[`scroll${index}`], this.props.showPlay, prevProps.showPlay)
         })
     }
 
@@ -58,11 +60,11 @@ class Search extends React.Component {
             return
         }
 
-        if (this.isLoading) {
+        if (this[`isLoading${currentIndex}`]) {
             return
         }
 
-        this.isLoading = true
+        this[`isLoading${currentIndex}`] = true
 
         this.setState({
             loading: true
@@ -80,8 +82,10 @@ class Search extends React.Component {
                 count: res.data.searchResult.count
             })
 
+            // 等首次获取到数据后再初始化swipe，以便swipe可以正确计算宽度
             this.setState({
-                tabs: tabs
+                tabs: tabs,
+                isReady: true
             })
         } catch (e) {
             console.log(e)
@@ -91,7 +95,7 @@ class Search extends React.Component {
             loading: false
         })
 
-        this.isLoading = false
+        this[`isLoading${currentIndex}`] = false
     }
 
     goBack() {
@@ -139,7 +143,7 @@ class Search extends React.Component {
         this.props.rmSearchHistory(keywords)
     }
 
-    onTabClick(index) {
+    onTabClick(index, isTab = true) {
         let tab = this.state.tabs[index]
         this.setState({
             currentIndex: index
@@ -147,6 +151,10 @@ class Search extends React.Component {
 
         // 保存tab状态
         this.props.history.replace(`${this.props.match.url}?index=${index}`)
+
+        if (isTab) {
+            this.swipe.slide(index)
+        }
 
         setTimeout(() => {
             tab.list.length === 0 && this.loadSearchResult()
@@ -170,6 +178,12 @@ class Search extends React.Component {
         let song = this.state.tabs[0].list[index]
         try {
             let res = await api.getMusic(song.id)
+            let lyrics = res.data.lyrics
+
+            if (!res.data.music.url) {
+                this.alert.show('添加歌曲失败,找不到播放地址')
+                return
+            }
             
             let music = new Music({
                 name: song.name,
@@ -177,7 +191,8 @@ class Search extends React.Component {
                 duration: song.duration,
                 artistName: song.artists[0].name,
                 picUrl: song.album.picUrl || '/images/notFound.jpg',
-                url: res.data.music.url
+                url: res.data.music.url,
+                lyric: lyrics.tlyric.lyric || lyrics.lrc.lyric || lyrics.klyric.lyric
             })
 
             this.props.addMusic(music)
@@ -192,18 +207,17 @@ class Search extends React.Component {
             list: [],
             count: 0
         }))
-
-        let matched = this.props.location.search.match(/\d/)
         
         this.setState({
             tabs,
-            currentIndex: (matched && +matched[0]) || 0
+            currentIndex: 0
         })
+        this.swipe.slide(0)
     }
 
     render() {
-        let { keywords, isSearchResultPage, tabs, currentIndex, loading, probeType } = this.state
-        let { searchHistory, rmSearchHistory } = this.props
+        let { keywords, isSearchResultPage, tabs, currentIndex, loading, probeType, isReady } = this.state
+        let { searchHistory, rmSearchHistory, showPlay } = this.props
 
         return (
             <div>
@@ -212,23 +226,36 @@ class Search extends React.Component {
                     <input type="text" ref={input => this.input = input} className="search-input" defaultValue={keywords} placeholder="请输入关键词..."/>
                 </form>
                 {
-                    !isSearchResultPage && <HistoryList searchHistory={searchHistory} onKeywordsClick={(keywords) => this.keywordsClick(keywords)} onCloseClick={rmSearchHistory} />
+                    !isSearchResultPage && (
+                        <div className="history-scroll-wrapper" style={{ bottom: showPlay ? '50px' : 0 }}>
+                            <Scroll ref={historyScroll => this.historyScroll = historyScroll}>
+                                <HistoryList searchHistory={searchHistory} onKeywordsClick={(keywords) => this.keywordsClick(keywords)} onCloseClick={rmSearchHistory} />
+                            </Scroll>
+                        </div>
+                    )
                 }
                 {
                     isSearchResultPage && <TabMenu currentIndex={currentIndex} tabs={tabs} onTabClick={(index) => this.onTabClick(index)} />
                 }
                 {
-                    isSearchResultPage && tabs.map((item, index) => (
-                        <div className={classNames({ 'search-result-wrapper': true, active: currentIndex === index })} key={item.type} ref={scrollWrapper => this[`scrollWrapper${index}`] = scrollWrapper}>
-                            <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType} ref={scroll => this[`scroll${index}`] = scroll}>
-                                <div>
-                                    <item.component list={item.list} onContentClick={(row) => this.itemClick(row, index)} />
-                                    <Loading complete={item.list.length !== 0 && item.list.length >= item.count} show={currentIndex === index && loading === true} />
-                                </div>
-                            </Scroll>
-                        </div>
-                    ))
+                    isSearchResultPage && isReady && (
+                        <Swipe continuous={false} auto={0} showDots={false} startSlide={currentIndex} callback={(index) => this.onTabClick(index, false)} ref={swipe => this.swipe = swipe}>
+                            {
+                                tabs.map((item, index) => (
+                                    <div className="search-result-wrapper" style={{ height: showPlay ? 'calc(100vh - 130px)' : 'calc(100vh - 80px)' }} key={item.type}>
+                                        <Scroll pullupFunc={() => this.loadSearchResult()} probeType={probeType} ref={scroll => this[`scroll${index}`] = scroll}>
+                                            <div>
+                                                <item.component list={item.list} onContentClick={(row) => this.itemClick(row, index)} />
+                                                <Loading complete={item.list.length !== 0 && item.list.length >= item.count} show={currentIndex === index && loading === true} />
+                                            </div>
+                                        </Scroll>
+                                    </div>
+                                ))
+                            }
+                        </Swipe>
+                    )
                 }
+                <Alert ref={alert => this.alert = alert} />
             </div>
         )
     }

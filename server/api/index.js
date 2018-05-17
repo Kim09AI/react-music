@@ -91,6 +91,14 @@ class Service {
             }
         })
     }
+
+    getLyric(id) {
+        return axios.get('/lyric', {
+            params: {
+                id
+            }
+        })
+    }
 }
 
 export default new Service()

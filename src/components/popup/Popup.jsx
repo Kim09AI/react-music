@@ -35,7 +35,7 @@ class Popup extends React.Component {
 
     render() {
         let { show } = this.state
-        let { title, info, cancelText, confirmText } = this.props
+        let { title, message, cancelText, confirmText } = this.props
         
         return (
             <div className={classNames({ 'popup-wrapper': true, active: show })}>
@@ -45,7 +45,7 @@ class Popup extends React.Component {
                             title && <h3 className="title">{title}</h3>
                         }
                         {
-                            info && <div className="info">{info}</div>
+                            message && <div className="message">{message}</div>
                         }
                     </div>
                     <div className="footer">
@@ -66,7 +66,7 @@ Popup.defaultProps = {
 
 Popup.propTypes = {
     title: PropTypes.string,
-    info: PropTypes.string,
+    message: PropTypes.string,
     cancelText: PropTypes.string,
     confirmText: PropTypes.string,
     cancelFunc: PropTypes.func,

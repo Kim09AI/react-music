@@ -76,13 +76,37 @@ export const debounce = function(fn, delay = 100, context) {
     }
 }
 
-export const setScrollBottom = (scrollWrapper, scroll, showPlay, prevShowPlay, bottom = 50) => {
+export const setScrollBottom = (scroll, showPlay, prevShowPlay) => {
     if (showPlay === prevShowPlay) {
         return
     }
 
-    if (scrollWrapper) {
-        scrollWrapper.style.bottom = showPlay ? `${bottom}px` : 0
-    }
     scroll && scroll.refresh()
+}
+
+export const shuffle = (arr) => {
+    let _arr = arr.slice()
+    _arr.forEach((value, i) => {
+        let j = ~~(Math.random() * (i + 1))
+        let temp = _arr[j]
+        _arr[j] = _arr[i]
+        _arr[i] = temp
+    })
+
+    return _arr
+}
+
+export const modeData = {
+    random: {
+        text: '随机播放',
+        icon: '&#xe64a;'
+    },
+    order: {
+        text: '顺序播放',
+        icon: '&#xe66d;'
+    },
+    loop: {
+        text: '单曲循环',
+        icon: '&#xe66e;'
+    }
 }

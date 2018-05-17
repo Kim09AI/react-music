@@ -21,8 +21,8 @@ export default class ProgressBar extends React.Component {
         this.initEvents()
     }
 
-    componentWillReceiveProps(nextProps, props) {
-        if (!this.isTouch && nextProps.percentage !== props.percentage) {
+    componentWillReceiveProps(nextProps) {
+        if (!this.isTouch && nextProps.percentage !== this.props.percentage) {
             this.setState({
                 percentage: nextProps.percentage
             })

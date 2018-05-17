@@ -11,6 +11,7 @@ import playList from './playList/query'
 import albumDetail from './album/query'
 import artistDetail from './artist/query'
 import music from './music/query'
+import lyrics from './lyrics/query'
 
 const schema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -23,7 +24,8 @@ const schema = new GraphQLSchema({
             playList,
             albumDetail,
             artistDetail,
-            music
+            music,
+            lyrics
         }
     })
 })

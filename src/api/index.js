@@ -288,6 +288,22 @@ class Service {
                         id
                         url
                     }
+                    lyrics(id: ${id}) {
+                        lrc {
+                            ...lyric
+                        }
+                        klyric {
+                            ...lyric
+                        }
+                        tlyric {
+                            ...lyric
+                        }
+                    }
+                }
+                
+                fragment lyric on Lyric {
+                    version
+                    lyric
                 }`
             }
         })

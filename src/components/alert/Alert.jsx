@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 import './alert.styl'
 
 class Alert extends React.Component {
@@ -44,7 +45,7 @@ class Alert extends React.Component {
     }
 
     render() {
-        return <div className="alert-wrapper" ref={alert => this.alert = alert}>{this.state.msg}</div>
+        return <div className={classNames({ 'alert-wrapper': true, hide: !this.state.show })} ref={alert => this.alert = alert}>{this.state.msg}</div>
     }
 }
 

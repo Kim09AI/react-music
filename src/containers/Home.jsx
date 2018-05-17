@@ -37,7 +37,7 @@ class Home extends React.Component {
             <div>
                 <CommonHeader />
                 <TabMenu tabs={this.state.tabs} currentIndex={this.currentIndex()} onTabClick={(index) => this.onTabClick(index)} />
-                <div className="scroll-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
+                <div className="scroll-wrapper" style={{ bottom: this.props.showPlay ? '50px' : 0 }}>
                     {/* 添加嵌套路由 */}
                     {this.props.children}
                 </div>

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import { Motion, spring } from 'react-motion'
 import classNames from 'classnames'
 import Scroll from '../scroll/Scroll'
+import { modeData } from 'utils'
 import './musicList.styl'
 
 export default function MusicList(props) {
-    let { list, hideMusicList, switchMusic, activeId, show, removeMusic } = props
+    let { list, hideMusicList, switchMusic, activeId, show, removeMusic, mode, toggleMode, clearAll } = props
 
     return (
         <div>
@@ -15,12 +16,12 @@ export default function MusicList(props) {
                     ({ y }) => (
                         <div className="music-list-wrapper" style={{ transform: `translateY(${y}%)` }}>
                             <div className="header">
-                                <i className="iconfont">&#xe66d;</i>
-                                <span className="text">列表循环&nbsp;({list.length})</span>
+                                <i className="iconfont" dangerouslySetInnerHTML={{ __html: modeData[mode].icon }} onClick={() => toggleMode()}></i>
+                                <span className="text" onClick={() => toggleMode()}>{modeData[mode].text}&nbsp;({list.length})</span>
                                 <i className="iconfont collect">&#xe62f;</i>
                                 <span className="collect-text">收藏全部</span>
                                 <span className="line"></span>
-                                <i className="iconfont clear">&#xe66c;</i>
+                                <i className="iconfont clear" onClick={() => clearAll()}>&#xe66c;</i>
                             </div>
                             <div className="music-list">
                                 <Scroll>
@@ -65,5 +66,8 @@ MusicList.propTypes = {
     switchMusic: PropTypes.func,
     activeId: PropTypes.string,
     show: PropTypes.bool,
-    removeMusic: PropTypes.func
+    removeMusic: PropTypes.func,
+    mode: PropTypes.string,
+    toggleMode: PropTypes.func,
+    clearAll: PropTypes.func
 }

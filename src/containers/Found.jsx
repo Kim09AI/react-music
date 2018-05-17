@@ -13,7 +13,7 @@ class Found extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        setScrollBottom(null, this.scroll, this.props.showPlay, prevProps.showPlay)
+        setScrollBottom(this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     onItemClick(index) {

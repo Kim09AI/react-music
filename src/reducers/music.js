@@ -1,21 +1,23 @@
 import { createReducer } from '../utils/reactUtil'
 import * as types from '../actions/actionTypes'
 import storage from 'good-storage'
-import { distinctList } from '../utils'
+import { distinctList, shuffle } from '../utils'
 
 const MUSIC_KEY = 'musicKey'
 
 const _music = storage.get(MUSIC_KEY, {
     originList: [],
-    mode: ''
+    mode: 'order', // random order loop
 })
 
 const musicDistinctList = (state, action) => distinctList(state.originList, action.music, item => item.id === action.music.id)
 
 const getCurrentList = ({ originList, mode }) => {
-    if (mode === '') {
-        return originList
+    if (mode === 'random') {
+        return shuffle(originList)
     }
+
+    return originList
 }
 
 const initialState = {
@@ -23,7 +25,7 @@ const initialState = {
     currentList: getCurrentList(_music),
     mode: _music.mode,
     currentIndex: 0,
-    showPlay: false
+    showPlay: !!_music.originList.length
 }
 
 const music = createReducer(initialState, {
@@ -98,6 +100,42 @@ const music = createReducer(initialState, {
         return {
             ...state,
             currentIndex: index
+        }
+    },
+    [types.TOGGLE_MODE](state, action) {
+        let { mode, originList, currentList, currentIndex } = state
+        if (mode === 'order') {
+            mode = 'random'
+        } else if (mode === 'random') {
+            mode = 'loop'
+        } else {
+            mode = 'order'
+        }
+
+        let currentMusic = currentList[currentIndex]
+        currentList = getCurrentList({ mode, originList })
+        currentIndex = currentList.findIndex(item => item.id === currentMusic.id)
+
+        _music.mode = mode
+        storage.set(MUSIC_KEY, _music)
+
+        return {
+            ...state,
+            currentList,
+            currentIndex,
+            mode
+        }
+    },
+    [types.REMOVE_ALL_MUSIC](state, action) {
+        _music.originList = []
+        storage.set(MUSIC_KEY, _music)
+
+        return {
+            ...state,
+            originList: [],
+            currentList: [],
+            currentIndex: 0,
+            showPlay: false
         }
     }
 })

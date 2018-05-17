@@ -51,13 +51,17 @@ export default class Swipe extends React.Component {
                 <ReactSwipe ref={reactSwipe => this.reactSwipe = reactSwipe} swipeOptions={{ ...this.props, callback: (...args) => this.callback(...args) }}>
                     {this.props.children}
                 </ReactSwipe>
-                <div className="dots">
-                    {
-                        new Array(this.props.children.length).fill(null).map((item, index) => (
-                            <span className={classNames({ dot: true, active: currentIndex === index })} key={index}></span>
-                        ))
-                    }
-                </div>
+                {
+                    this.props.showDots && (
+                        <div className="dots">
+                            {
+                                new Array(this.props.children.length).fill(null).map((item, index) => (
+                                    <span className={classNames({ dot: true, active: currentIndex === index })} key={index}></span>
+                                ))
+                            }
+                        </div>
+                    )
+                }
             </div>
         )
     }
@@ -69,6 +73,7 @@ Swipe.defaultProps = {
     speed: 300,
     disableScroll: false,
     continuous: true,
+    showDots: true,
     callback() {},
     transitionEnd() {}
 }
@@ -80,5 +85,6 @@ Swipe.propTypes = {
     disableScroll: PropTypes.bool,
     continuous: PropTypes.bool,
     callback: PropTypes.func,
-    transitionEnd: PropTypes.func
+    transitionEnd: PropTypes.func,
+    showDots: PropTypes.bool
 }

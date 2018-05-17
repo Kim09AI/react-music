@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { prevMusic, nextMusic, switchMusic, removeMusic } from '../actions/music'
+import { prevMusic, nextMusic, switchMusic, removeMusic, toggleMode, removeAllMusic } from '../actions/music'
 import MiniPlay from 'components/miniPlay/MiniPlay'
 import MusicList from 'components/musicList/MusicList'
 import FullPlay from 'components/fullPlay/FullPlay'
 import Alert from 'components/alert/Alert'
+import Popup from 'components/popup/Popup'
 
 class Play extends React.Component {
     constructor(props) {
@@ -14,8 +15,13 @@ class Play extends React.Component {
             currentTime: 0,
             initSuccess: false,
             showList: false,
-            showMiniPlay: true
+            showMiniPlay: true,
+            autoPlay: !this.props.showPlay
         }
+        this.playError = this.playError.bind(this)
+        this.timeUpdate = this.timeUpdate.bind(this)
+        this.ended = this.ended.bind(this)
+        this.canPlay = this.canPlay.bind(this)
     }
     
     componentDidMount() {
@@ -32,21 +38,42 @@ class Play extends React.Component {
         }
 
         this.setState({
-            initSuccess: true,
-            paused: false
+            initSuccess: true
         })
 
-        this.audio.addEventListener('error', () => this.playError())
+        this.audio.addEventListener('error', this.playError)
 
-        this.audio.addEventListener('timeupdate', () => this.timeUpdate())
+        this.audio.addEventListener('timeupdate', this.timeUpdate)
 
-        this.audio.addEventListener('ended', () => this.ended())
+        this.audio.addEventListener('ended', this.ended)
 
-        this.audio.addEventListener('canplay', () => {
-            this.state.paused && this.setState({
-                paused: false
-            })
+        this.audio.addEventListener('canplay', this.canPlay)
+    }
+
+    destoryAudioEvent() {
+        this.audio.removeEventListener('error', this.playError)
+
+        this.audio.removeEventListener('timeupdate', this.timeUpdate)
+
+        this.audio.removeEventListener('ended', this.ended)
+
+        this.audio.removeEventListener('canplay', this.canPlay)
+
+        this.audio = null
+    }
+
+    canPlay() {
+        // 如果是第一次播放且不是自动播放,即只初始化播放器的情况
+        if (this.firstMusic === undefined && !this.state.autoPlay) {
+            this.firstMusic = false
+            return
+        }
+
+        this.state.paused && this.setState({
+            paused: false,
+            autoPlay: true
         })
+        this.audio.play()
     }
 
     playError() {
@@ -70,6 +97,11 @@ class Play extends React.Component {
     }
 
     ended() {
+        if (this.props.mode === 'loop') {
+            this.audio.currentTime = 0
+            return
+        }
+
         if (this.props.currentList.length > this.props.currentIndex + 1) {
             this.props.nextMusic(true)
             this.setState({
@@ -93,13 +125,20 @@ class Play extends React.Component {
         }
 
         this.setState({
-            paused: !paused
+            paused: !paused,
+            autoPlay: true
         })
     }
 
-    toggleMusicList() {
+    showMusicList() {
         this.setState({
-            showList: !this.state.showList
+            showList: true
+        })
+    }
+
+    hideMusicList() {
+        this.setState({
+            showList: false
         })
     }
 
@@ -132,10 +171,36 @@ class Play extends React.Component {
         this.audio.currentTime = duration * percentage
     }
 
-    render() {
-        let { paused, currentTime, showList, showMiniPlay } = this.state
-        let { currentIndex, originList, currentList, showPlay, removeMusic, prevMusic, nextMusic } = this.props
+    showPopup() {
+        this.popup.show()
+    }
 
+    removeMusic(music) {
+        if (this.props.currentList.length === 1) {
+            this.removeAllMusic()
+            return
+        }
+        this.props.removeMusic(music)
+    }
+
+    removeAllMusic() {
+        this.setState({
+            paused: true,
+            currentTime: 0,
+            initSuccess: false,
+            showList: false,
+            showMiniPlay: true,
+            autoPlay: true
+        })
+        
+        this.destoryAudioEvent()
+        this.props.removeAllMusic()
+    }
+
+    render() {
+        let { paused, currentTime, showList, showMiniPlay, autoPlay } = this.state
+        let { currentIndex, originList, currentList, showPlay, prevMusic, nextMusic, mode, toggleMode } = this.props
+        
         if (!showPlay) {
             return null
         }
@@ -146,7 +211,7 @@ class Play extends React.Component {
                     music={currentList[currentIndex]} 
                     paused={paused} 
                     percentage={currentTime / currentList[currentIndex].duration * 1000} 
-                    showMusicList={() => this.toggleMusicList()}
+                    showMusicList={() => this.showMusicList()}
                     togglePlay={() => this.togglePlay()} 
                     swipe={(e) => this.swipe(e)}
                     contentClick={() => this.toggleMusicPlay()}
@@ -156,7 +221,8 @@ class Play extends React.Component {
                     paused={paused} 
                     percentage={currentTime / currentList[currentIndex].duration * 1000} 
                     show={!showMiniPlay}
-                    showMusicList={() => this.toggleMusicList()}
+                    mode={mode}
+                    showMusicList={() => this.showMusicList()}
                     togglePlay={() => this.togglePlay()} 
                     prevMusic={() => prevMusic()}
                     nextMusic={() => nextMusic()}
@@ -164,19 +230,24 @@ class Play extends React.Component {
                     duration={currentList[currentIndex].duration}
                     percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)}
                     goBackFunc={() => this.toggleMusicPlay()}
+                    toggleMode={() => toggleMode()}
                 />
                 {
-                    !!currentList.length && <audio ref={audio => this.audio = audio} src={currentList[currentIndex].url} autoPlay></audio>
+                    !!currentList.length && <audio ref={audio => this.audio = audio} src={currentList[currentIndex].url} autoPlay={autoPlay}></audio>
                 }
                 <MusicList 
                     list={originList} 
                     show={showList} 
                     activeId={currentList[currentIndex].id} 
+                    mode={mode}
                     switchMusic={(id) => this.switchMusic(id)} 
-                    hideMusicList={() => this.toggleMusicList()} 
-                    removeMusic={(music) => removeMusic(music)}
+                    hideMusicList={() => this.hideMusicList()} 
+                    removeMusic={(music) => this.removeMusic(music)}
+                    toggleMode={() => toggleMode()}
+                    clearAll={() => this.showPopup()}
                 />
                 <Alert ref={alert => this.alert = alert} />
+                <Popup title="确定清空播放列表" message="确定清空播放列表" ref={popup => this.popup = popup} confirmFunc={() => this.removeAllMusic()} />
             </div>
         )
     }
@@ -189,7 +260,8 @@ const mapStateToProps = state => {
         originList: music.originList,
         currentList: music.currentList,
         currentIndex: music.currentIndex,
-        showPlay: music.showPlay
+        showPlay: music.showPlay,
+        mode: music.mode
     }
 }
 
@@ -197,7 +269,9 @@ const mapDispatchToProps = {
     prevMusic,
     nextMusic,
     switchMusic,
-    removeMusic
+    removeMusic,
+    toggleMode,
+    removeAllMusic
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Play)

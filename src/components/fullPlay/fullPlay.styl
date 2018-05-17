@@ -11,6 +11,7 @@
         background-position: center
         background-size auto 100%
         filter: blur(35px)
+        opacity 0.6
         position: absolute
         top: 0
         left 0
@@ -52,6 +53,9 @@
     .music-turn-wrapper
         position relative
         padding-top: 20%
+        height calc(100vh - 148px - 50px - 20px)
+        min-height: 321px
+        box-sizing: border-box
         .music-turn-bg
             width: 70%
             height 0
@@ -80,13 +84,28 @@
             top: 0
             left 42%
             width: 30%
-            height 42%
+            height 0
+            padding-top: 39%
             z-index 1
             transition: all 0.3s
             transform: rotate(-25deg)
             transform-origin: 15px 0
             &.active
                 transform: rotate(0)
+    .lyric-wrapper
+        font-size: 14px
+        color: #cecece
+        text-align: center
+        height calc(100vh - 148px - 50px - 20px)
+        overflow hidden
+        .placehoder
+            height: calc((100vh - 148px - 50px - 20px) / 2)
+        .lyric
+            padding: 10px 25px
+            line-height: 1.4
+            word-break: break-all
+            &.active
+                color: #ffffff
                 
     .control-wrapper
         position: absolute

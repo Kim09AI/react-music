@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import SongList from 'components/songList/SongList'
 import Scroll from '../components/scroll/Scroll'
+import Alert from 'components/alert/Alert'
 import api from 'api'
 import { addMusic } from '../actions/music'
 import { numFormat, setScrollBottom } from 'utils'
@@ -41,6 +42,12 @@ class PlaylistDetail extends React.Component {
         let song = this.state.playList.tracks[index]
         try {
             let res = await api.getMusic(song.id)
+            let lyrics = res.data.lyrics
+
+            if (!res.data.music.url) {
+                this.alert.show('添加歌曲失败,找不到播放地址')
+                return
+            }
             
             let music = new Music({
                 name: song.name,
@@ -48,7 +55,8 @@ class PlaylistDetail extends React.Component {
                 duration: song.duration,
                 artistName: song.artists[0].name,
                 picUrl: song.album.picUrl,
-                url: res.data.music.url
+                url: res.data.music.url,
+                lyric: lyrics.tlyric.lyric || lyrics.lrc.lyric || lyrics.klyric.lyric
             })
 
             this.props.addMusic(music)
@@ -59,6 +67,7 @@ class PlaylistDetail extends React.Component {
 
     render() {
         let { playList } = this.state
+        let { showPlay } = this.props
 
         return (
             <div>
@@ -71,7 +80,7 @@ class PlaylistDetail extends React.Component {
                     <i className="iconfont search">&#xe600;</i>
                     <i className="iconfont more">&#xe609;</i>  
                 </div>
-                <div className="play-list-detail-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
+                <div className="play-list-detail-wrapper" style={{ bottom: showPlay ? '50px' : 0 }}>
                     {
                         !!Object.keys(playList).length && (
                             <Scroll ref={scroll => this.scroll = scroll}>
@@ -130,6 +139,7 @@ class PlaylistDetail extends React.Component {
                         )
                     }
                 </div>
+                <Alert ref={alert => this.alert = alert} />
             </div>
         )
     }

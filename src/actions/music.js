@@ -10,6 +10,10 @@ export const removeMusic = music => ({
     music
 })
 
+export const removeAllMusic = () => ({
+    type: types.REMOVE_ALL_MUSIC
+})
+
 export const prevMusic = () => ({
     type: types.PREV_MUSIC
 })
@@ -22,4 +26,8 @@ export const nextMusic = (isAuto = false) => ({
 export const switchMusic = (id) => ({
     type: types.SWITCH_MUSIC,
     id
+})
+
+export const toggleMode = () => ({
+    type: types.TOGGLE_MODE
 })

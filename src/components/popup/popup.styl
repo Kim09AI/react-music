@@ -5,11 +5,10 @@
     right 0
     bottom: 0
     z-index: 998
-    display: flex
     align-items: center
     display: none
     &.active
-        display: block
+        display: flex
     .popup
         position: relative
         width: 75%
@@ -18,17 +17,31 @@
         z-index: 1
         background-color: #ffffff
         display: none
+        border-radius: 10px
         &.active
-            animation scale 0.3s
+            animation scale 0.4s
             display: block
+        .content
+            text-align: center
+            padding: 15px
+            line-height: 30px
+            .title
+                color: #333333
+            .message
+                color: #848484
+                font-size: 14px
         .footer
             display: flex
             border-top: 1px solid #e2e2e2
             .btn
                 flex: 1
                 font-size: 14px
-                color: #cccccc
+                color: #525252
                 text-align: center
+                padding: 7px 0
+                box-sizing: border-box
+            .btn + .btn
+                border-left: 1px solid #e2e2e2
     .cover
         position: absolute
         background-color: rgba(120, 120, 120, 0.6)
@@ -41,7 +54,7 @@
         &.active
             display: block
             opacity: 1
-            transition: all 0.3s
+            transition: all 0.4s
 
 @keyframes scale
     0%

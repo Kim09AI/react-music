@@ -29,7 +29,7 @@ class RadioDetail extends React.Component {
             this.tabToggle = false
             this.scroll.refresh()
         }
-        setScrollBottom(this.scrollWrapper, this.scroll, this.props.showPlay, prevProps.showPlay)
+        setScrollBottom(this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     async getRadioDetail() {
@@ -54,6 +54,7 @@ class RadioDetail extends React.Component {
 
     render() {
         let { currentIndex, radioDetail, radioPrograms } = this.state
+        let { showPlay } = this.props
 
         return (
             <div>
@@ -63,7 +64,7 @@ class RadioDetail extends React.Component {
                     <i className="iconfont shape">&#xe648;</i>
                     <i className="iconfont more">&#xe609;</i>  
                 </div>
-                <div className="radio-detail-wrapper" ref={scrollWrapper => this.scrollWrapper = scrollWrapper}>
+                <div className="radio-detail-wrapper" style={{ bottom: showPlay ? '50px' : 0 }}>
                     {
                         !!Object.keys(radioDetail).length && (
                             <Scroll ref={scroll => this.scroll = scroll}>

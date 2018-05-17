@@ -14,8 +14,12 @@ export const ADD_MUSIC = 'ADD_MUSIC'
 
 export const REMOVE_MUSIC = 'REMOVE_MUSIC'
 
+export const REMOVE_ALL_MUSIC = 'REMOVE_ALL_MUSIC'
+
 export const PREV_MUSIC = 'PREV_MUSIC'
 
 export const NEXT_MUSIC = 'NEXT_MUSIC'
 
 export const SWITCH_MUSIC = 'SWITCH_MUSIC'
+
+export const TOGGLE_MODE = 'TOGGLE_MODE'
