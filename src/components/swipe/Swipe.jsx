@@ -72,7 +72,7 @@ Swipe.defaultProps = {
     auto: 3000,
     speed: 300,
     disableScroll: false,
-    continuous: true,
+    continuous: true, // 是否无缝切换
     showDots: true,
     callback() {},
     transitionEnd() {}

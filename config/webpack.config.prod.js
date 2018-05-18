@@ -208,10 +208,14 @@ module.exports = {
                             flexbox: 'no-2009',
                           }),
                         ],
+                        sourceMap: shouldUseSourceMap,
                       },
                     },
                     {
-                      loader: require.resolve('stylus-loader') // compiles stylus to CSS
+                      loader: require.resolve('stylus-loader'), // compiles stylus to CSS
+                      options: {
+                        sourceMap: shouldUseSourceMap,
+                      }
                     },
                   ],
                 },
@@ -337,6 +341,26 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // split vendor js into its own file
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+    // extract webpack runtime and module manifest to its own file in order to
+    // prevent vendor hash from being updated whenever app bundle is updated
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vender-manifest',
+      chunks: ['vendor']
+    }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

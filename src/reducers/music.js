@@ -10,7 +10,7 @@ const _music = storage.get(MUSIC_KEY, {
     mode: 'order', // random order loop
 })
 
-const musicDistinctList = (state, action) => distinctList(state.originList, action.music, item => item.id === action.music.id)
+const musicDistinctList = (state, action) => distinctList(state.originList, item => item.id === action.music.id)
 
 const getCurrentList = ({ originList, mode }) => {
     if (mode === 'random') {
@@ -112,6 +112,7 @@ const music = createReducer(initialState, {
             mode = 'order'
         }
 
+        // 设置当前歌曲在切换模式后的index
         let currentMusic = currentList[currentIndex]
         currentList = getCurrentList({ mode, originList })
         currentIndex = currentList.findIndex(item => item.id === currentMusic.id)
