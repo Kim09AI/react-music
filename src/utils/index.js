@@ -81,7 +81,7 @@ export const debounce = function(fn, delay = 100, context) {
     }
 }
 
-export const setScrollBottom = (scroll, showPlay, prevShowPlay) => {
+export const refreshScroll = (scroll, showPlay, prevShowPlay) => {
     if (showPlay === prevShowPlay) {
         return
     }

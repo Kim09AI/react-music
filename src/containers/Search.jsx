@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import api from 'api'
 import Music from 'utils/music'
-import { setScrollBottom } from 'utils'
+import { refreshScroll } from 'utils'
 import { addMusic } from '../actions/music'
 import { getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
 import HistoryList from 'components/historyList/HistoryList'
@@ -48,7 +48,7 @@ class Search extends React.Component {
 
     componentDidUpdate(prevProps) {
         this.state.tabs.forEach((item, index) => {
-            setScrollBottom(this[`scroll${index}`], this.props.showPlay, prevProps.showPlay)
+            refreshScroll(this[`scroll${index}`], this.props.showPlay, prevProps.showPlay)
         })
     }
 

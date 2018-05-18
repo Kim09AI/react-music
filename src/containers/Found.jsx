@@ -4,7 +4,7 @@ import Scroll from '../components/scroll/Scroll'
 import Swipe from '../components/swipe/Swipe'
 import ThumbnailList from '../components/thumbnailList/ThumbnailList'
 import { getHomeData } from '../actions/home'
-import { setScrollBottom } from 'utils'
+import { refreshScroll } from 'utils'
 import './found.styl'
 
 class Found extends React.Component {
@@ -13,7 +13,7 @@ class Found extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        setScrollBottom(this.scroll, this.props.showPlay, prevProps.showPlay)
+        refreshScroll(this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     onItemClick(index) {

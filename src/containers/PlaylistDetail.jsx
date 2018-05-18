@@ -5,7 +5,7 @@ import Scroll from '../components/scroll/Scroll'
 import Alert from 'components/alert/Alert'
 import api from 'api'
 import { addMusic } from '../actions/music'
-import { numFormat, setScrollBottom } from 'utils'
+import { numFormat, refreshScroll } from 'utils'
 import Music from '../utils/music'
 import './playlistDetail.styl'
 
@@ -23,7 +23,7 @@ class PlaylistDetail extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        setScrollBottom(this.scrollWrapper, this.scroll, this.props.showPlay, prevProps.showPlay)
+        refreshScroll(this.scrollWrapper, this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     async getPlayList() {
