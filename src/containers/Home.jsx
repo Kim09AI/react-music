@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import CommonHeader from '../components/commonHeader/CommonHeader'
 import TabMenu from '../components/tabMenu/TabMenu'
-import { setScrollBottom } from 'utils'
+import { refreshScroll } from 'utils'
 import './home.styl'
 
 class Home extends React.Component {
@@ -18,7 +18,7 @@ class Home extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        setScrollBottom(this.scrollWrapper, null, this.props.showPlay, prevProps.showPlay)
+        refreshScroll(this.scrollWrapper, null, this.props.showPlay, prevProps.showPlay)
     }
 
     onTabClick(index) {
