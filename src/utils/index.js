@@ -37,7 +37,7 @@ export function getDate(time, connectStr = '.') {
     let month = date.getMonth() + 1
     let day = date.getDate()
 
-    return year + connectStr + month + connectStr + day
+    return [year, month, day].join(connectStr)
 }
 
 export function dateFormat(fmt, date = new Date()) {
@@ -56,7 +56,12 @@ export function dateFormat(fmt, date = new Date()) {
     return fmt;
 }
 
-export function distinctList(list, obj, fn) {
+/**
+ * 找到并删除对应项
+ * @param {array} list 
+ * @param {function} fn 查找函数
+ */
+export function distinctList(list, fn) {
     let index = list.findIndex(fn)
     if (index === -1) {
         return list
@@ -76,7 +81,7 @@ export const debounce = function(fn, delay = 100, context) {
     }
 }
 
-export const setScrollBottom = (scroll, showPlay, prevShowPlay) => {
+export const refreshScroll = (scroll, showPlay, prevShowPlay) => {
     if (showPlay === prevShowPlay) {
         return
     }

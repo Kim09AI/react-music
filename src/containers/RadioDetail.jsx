@@ -5,7 +5,7 @@ import api from 'api'
 import Scroll from '../components/scroll/Scroll'
 import CommentList from '../components/commentList/CommentList'
 import ProgramList from '../components/programList/ProgramList'
-import { numFormat, setScrollBottom } from 'utils'
+import { numFormat, refreshScroll } from 'utils'
 import './radioDetail.styl'
 
 class RadioDetail extends React.Component {
@@ -29,7 +29,7 @@ class RadioDetail extends React.Component {
             this.tabToggle = false
             this.scroll.refresh()
         }
-        setScrollBottom(this.scroll, this.props.showPlay, prevProps.showPlay)
+        refreshScroll(this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     async getRadioDetail() {

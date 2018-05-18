@@ -82,27 +82,28 @@ const PlayListResult = new GraphQLObjectType({
     }
 })
 
+const types = {
+    songCount: SongResult,
+    mvCount: MvResult,
+    albumCount: AlbumResult,
+    artistCount: ArtistResult,
+    playlistCount: PlayListResult,
+    djRadiosCount: RadioResult
+}
+
 export const SearchType = new GraphQLUnionType({
     name: 'SearchType',
     types: [SongResult, MvResult, AlbumResult, ArtistResult, PlayListResult, RadioResult],
     resolveType(value) {
-        if (value.hasOwnProperty('songCount')) {
-            return SongResult
-        }
-        if (value.hasOwnProperty('mvCount')) {
-            return MvResult
-        }
-        if (value.hasOwnProperty('albumCount')) {
-            return AlbumResult
-        }
-        if (value.hasOwnProperty('artistCount')) {
-            return ArtistResult
-        }
-        if (value.hasOwnProperty('playlistCount')) {
-            return PlayListResult
-        }
-        if (value.hasOwnProperty('djRadiosCount')) {
-            return RadioResult
-        }
+        let ret
+        
+        Object.keys(types).some(key => {
+            if (value.hasOwnProperty(key)) {
+                ret = types[key]
+                return true
+            }
+        })
+
+        return ret
     }
 })

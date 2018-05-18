@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import RadioThumbnailList from 'components/radiothumbnailList/RadiothumbnailList'
 import Scroll from '../components/scroll/Scroll'
 import { getRadio } from '../actions/radio'
-import { setScrollBottom } from 'utils'
+import { refreshScroll } from 'utils'
 
 class Radio extends React.Component {
     componentDidMount() {
@@ -11,7 +11,7 @@ class Radio extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        setScrollBottom(this.scroll, this.props.showPlay, prevProps.showPlay)
+        refreshScroll(this.scroll, this.props.showPlay, prevProps.showPlay)
     }
 
     itemClick(id) {
