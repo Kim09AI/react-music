@@ -107,7 +107,7 @@ export default class FullPlay extends React.Component {
                                         <div className="music-turn-wrapper" onClick={() => this.showLyric()}>
                                             <div className={classNames({ 'dist': true, active: !paused })}></div>
                                             <div className="music-turn-bg">
-                                                <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, active: paused })} />
+                                                <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, stop: paused && show })} />
                                             </div>
                                         </div>
                                     )
