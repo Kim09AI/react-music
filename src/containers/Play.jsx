@@ -6,6 +6,7 @@ import MusicList from 'components/musicList/MusicList'
 import FullPlay from 'components/fullPlay/FullPlay'
 import Alert from 'components/alert/Alert'
 import Popup from 'components/popup/Popup'
+import watcher from 'utils/watcher'
 
 class Play extends React.Component {
     constructor(props) {
@@ -21,11 +22,22 @@ class Play extends React.Component {
         this.playError = this.playError.bind(this)
         this.timeUpdate = this.timeUpdate.bind(this)
         this.ended = this.ended.bind(this)
-        this.canPlay = this.canPlay.bind(this)
+        this.readyPlay = this.readyPlay.bind(this)
+        this.addMusic = this.addMusic.bind(this)
     }
     
     componentDidMount() {
         this.initAudioEvent()
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // let nextMusic = nextProps.currentList[nextProps.currentIndex]
+        // let music =  this.props.currentList[this.props.currentIndex]
+        // let modeChange = nextProps.mode !== this.props.mode
+
+        // if (!modeChange && (nextMusic.id === music.id)) {
+        //     console.log('add')
+        // }
     }
 
     componentDidUpdate() {
@@ -47,22 +59,32 @@ class Play extends React.Component {
 
         this.audio.addEventListener('ended', this.ended)
 
-        this.audio.addEventListener('canplay', this.canPlay)
+        this.audio.addEventListener('canplay', this.readyPlay)
+
+        // hack手机设置currentTime的情况
+        this.audio.addEventListener('play', this.readyPlay)
+
+        // 当添加的歌曲和播放器上当前歌曲是同一首时,即歌曲url没变不会自动播放，需要额外处理
+        watcher.on('addMusic', this.addMusic)
     }
 
-    destoryAudioEvent() {
+    destroyAudioEvent() {
         this.audio.removeEventListener('error', this.playError)
 
         this.audio.removeEventListener('timeupdate', this.timeUpdate)
 
         this.audio.removeEventListener('ended', this.ended)
 
-        this.audio.removeEventListener('canplay', this.canPlay)
+        this.audio.removeEventListener('canplay', this.readyPlay)
+
+        this.audio.addEventListener('play', this.readyPlay)
+
+        watcher.destroy('addMusic', this.addMusic)
 
         this.audio = null
     }
 
-    canPlay() {
+    readyPlay() {
         // 如果是第一次播放且不是自动播放,即只初始化播放器的情况
         if (this.firstMusic === undefined && !this.state.autoPlay) {
             this.firstMusic = false
@@ -99,6 +121,9 @@ class Play extends React.Component {
     ended() {
         if (this.props.mode === 'loop') {
             this.audio.currentTime = 0
+            // 手机hack,手动调用play
+            this.audio.play()
+            watcher.emit('musicPlayEnd')
             return
         }
 
@@ -112,6 +137,16 @@ class Play extends React.Component {
                 paused: true,
                 currentTime: 0
             })
+        }
+        watcher.emit('musicPlayEnd')
+    }
+
+    addMusic(id) {
+        let { currentList, currentIndex } = this.props
+        let currentId = currentList[currentIndex].id
+        
+        if (id === currentId) {
+            this.state.paused && this.togglePlay()
         }
     }
     
@@ -151,6 +186,9 @@ class Play extends React.Component {
     switchMusic(id) {
         let currentMusic = this.props.currentList[this.props.currentIndex]
         if (currentMusic.id === id) {
+            if (this.audio.paused) {
+                this.togglePlay()
+            }
             return
         }
 
@@ -168,7 +206,11 @@ class Play extends React.Component {
     percentageChangeFunc(percentage) {
         let { currentIndex, currentList } = this.props
         let duration = currentList[currentIndex].duration / 1000
+
+        // 设置currentTime会触发canplay事件(pc),移动为play(仅暂停时)
         this.audio.currentTime = duration * percentage
+        // 手机hack,手动调用play
+        this.audio.play()
     }
 
     showPopup() {
@@ -193,7 +235,7 @@ class Play extends React.Component {
             autoPlay: true
         })
         
-        this.destoryAudioEvent()
+        this.destroyAudioEvent()
         this.props.removeAllMusic()
     }
 

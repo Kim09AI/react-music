@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development nodemon node index.js"
+    "dev": "cross-env NODE_ENV=development nodemon node index.js",
+    "start": "cross-env NODE_ENV=production node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-latest-node": "^1.0.0",
     "babel-preset-stage-3": "^6.24.1",
-    "cross-env": "^5.1.4"
+    "cross-env": "^5.1.5"
   }
 }

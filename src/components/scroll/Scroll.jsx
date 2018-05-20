@@ -62,6 +62,14 @@ export default class Scroll extends React.Component {
         this.scroll && this.scroll.refresh()
     }
 
+    scrollTo(x, y, time, easing) {
+        this.scroll && this.scroll.scrollTo(x, y, time, easing)
+    }
+
+    getMaxScrollY() {
+        return (this.scroll && this.scroll.maxScrollY) || 0
+    }
+
     render() {
         return (
             <div ref={wrapper => this.wrapper = wrapper} className="scroll">

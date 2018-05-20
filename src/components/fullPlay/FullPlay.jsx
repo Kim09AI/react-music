@@ -6,6 +6,7 @@ import { Motion, spring } from 'react-motion'
 import ProgressBar from '../progressBar/ProgressBar'
 import Scroll from 'components/scroll/Scroll'
 import { timeFormat, modeData } from 'utils'
+import watcher from 'utils/watcher'
 import './fullPlay.styl'
 
 export default class FullPlay extends React.Component {
@@ -16,27 +17,38 @@ export default class FullPlay extends React.Component {
             lines: [],
             currentLine: 0
         }
+        this.resetLyricPlay = this.resetLyricPlay.bind(this)
     }
 
     componentDidMount() {
-        this.initLyric(this.props.music.lyric)
-        this.setLyricState(!this.props.paused)
+        this.initLyric(this.props.music.lyric, !this.props.paused)
+        watcher.on('musicPlayEnd', this.resetLyricPlay)
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.music.id !== this.props.music.id) {
-            this.initLyric(nextProps.music.lyric)
-            this.setLyricState(!nextProps.paused)
+            this.initLyric(nextProps.music.lyric, !this.props.paused)
         }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         if (this.props.paused !== prevProps.paused) {
-            this.setLyricState(!this.props.paused)
+            !this.props.paused ? this.lyricPlay(this.props.currentTime) : this.lyricStop()
+        }
+        
+        // 歌词行数已改变或者是播放器由hide变成show
+        if (this.state.currentLine !== prevState.currentLine || (this.props.show === true && prevProps.show === false)) {
+            this.setLyricScroll(this.state.currentLine)
         }
     }
 
-    initLyric(lyric) {
+    componentWillUnmount() {
+        this.lyric.stop()
+        this.lyric = null
+        watcher.destroy('musicPlayEnd', this.resetLyricPlay)
+    }
+
+    initLyric(lyric, play) {
         this.lyric && this.lyric.stop()
         this.lyric = new Lyric(lyric, (...args) => this.lyricHandler(...args))
 
@@ -44,17 +56,22 @@ export default class FullPlay extends React.Component {
             lines: this.lyric.lines,
             currentLine: 0
         })
+
+        play && this.lyricPlay()
     }
 
     lyricHandler({ lineNum }) {
-        // console.log(lineNum)
         this.setState({
             currentLine: lineNum
         })
     }
 
-    setLyricState(play) {
-        // play ? this.lyric.play() : this.lyric.stop()
+    lyricPlay(startTime = 0) {
+        this.lyric.play(startTime)
+    }
+
+    lyricStop() {
+        this.lyric.stop()
     }
 
     showLyric() {
@@ -69,9 +86,45 @@ export default class FullPlay extends React.Component {
         })
     }
 
+    percentageChangeFunc(percentage) {
+        this.props.percentageChangeFunc(percentage)
+
+        let currentTime = this.props.duration * percentage
+        
+        // 点击或拖动滚动条时，currentTime 如果小于第一条歌词的播放时间
+        // lyric实例因为没有匹配的歌词，导致currentLine停留在上一次
+        if (currentTime < this.state.lines[0].time) {
+            this.setState({
+                currentLine: 0
+            })
+        }
+
+        this.lyricPlay(currentTime)
+    }
+
+    setLyricScroll(currentLine) {
+        if (!this.lyricDom) {
+            return
+        }
+
+        setTimeout(() => {
+            let maxScrollY = this.scroll.getMaxScrollY()
+            let lyricH = this.lyricDom.getBoundingClientRect().height
+            let scrollY = Math.max(-lyricH * currentLine, maxScrollY)
+            this.scroll.scrollTo(0, scrollY, 300)
+        }, 20)
+    }
+
+    resetLyricPlay() { // 歌曲播放结束后，重置歌词位置及播放
+        this.setState({
+            currentLine: 0
+        })
+        !this.props.paused && this.lyricPlay()
+    }
+
     render() {
         let { showLyric, lines, currentLine } = this.state
-        let { music, paused, show, togglePlay, prevMusic, nextMusic, showMusicList, percentage, currentTime, duration, percentageChangeFunc, goBackFunc, toggleMode, mode } = this.props
+        let { music, paused, show, togglePlay, prevMusic, nextMusic, showMusicList, percentage, currentTime, duration, goBackFunc, toggleMode, mode } = this.props
     
         return (
             <Motion style={{ y: spring(show ? 0 : 100), opacity: spring(show ? 1 : 0) }}>
@@ -87,31 +140,28 @@ export default class FullPlay extends React.Component {
                                 </div>
                                 <i className="iconfont shape">&#xe648;</i>
                             </div>
-                            {
-                                showLyric
-                                    ? (
-                                        <div className="lyric-wrapper" onClick={() => this.hideLyric()}>
-                                            <Scroll>
-                                                <div>
-                                                    <div className="placehoder"></div>
-                                                    {
-                                                        lines.map((item, index) => (
-                                                            <div key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
-                                                        ))
-                                                    }
-                                                </div>
-                                            </Scroll>
-                                        </div>
-                                    )
-                                    : (
-                                        <div className="music-turn-wrapper" onClick={() => this.showLyric()}>
-                                            <div className={classNames({ 'dist': true, active: !paused })}></div>
-                                            <div className="music-turn-bg">
-                                                <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, stop: paused && show })} />
-                                            </div>
-                                        </div>
-                                    )
-                            }
+                            <div className={classNames({ 'lyric-wrapper': true, visible: showLyric })} onClick={() => this.hideLyric()}>
+                                <Scroll ref={scroll => this.scroll = scroll}>
+                                    <div>
+                                        <div className="placehoder"></div>
+                                        {
+                                            lines.map((item, index) => {
+                                                if (index === 0) {
+                                                    return <div ref={lyricDom => this.lyricDom = lyricDom} key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
+                                                } else {
+                                                    return <div key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
+                                                }
+                                            })
+                                        }
+                                    </div>
+                                </Scroll>
+                            </div>
+                            <div className={classNames({ 'music-turn-wrapper': true, visible: !showLyric })} onClick={() => this.showLyric()}>
+                                <div className={classNames({ 'dist': true, active: !paused })}></div>
+                                <div className="music-turn-bg">
+                                    <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, stop: paused && show })} />
+                                </div>
+                            </div>
                             <div className="control-wrapper">
                                 <div className="other-control">
                                     <i className="iconfont">&#xe76a;</i>
@@ -122,7 +172,7 @@ export default class FullPlay extends React.Component {
                                 <div className="progressbar-wrapper">
                                     <span>{timeFormat(currentTime)}</span>
                                     <div className="progress">
-                                        <ProgressBar percentage={percentage} percentageChangeFunc={(percentage) => percentageChangeFunc(percentage)} />
+                                        <ProgressBar percentage={percentage} percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)} />
                                     </div>
                                     <span>{timeFormat(duration)}</span>
                                 </div>

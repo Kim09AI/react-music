@@ -50,8 +50,14 @@
         .shape
             margin-left: 10px
             font-size: 20px
+    .visible
+        z-index: 5 !important
+        opacity 1 !important
     .music-turn-wrapper
         position relative
+        z-index: 1
+        opacity 0
+        transform: translateY(-100%)
         padding-top: 20%
         height calc(100vh - 148px - 50px - 20px)
         min-height: 321px
@@ -93,11 +99,23 @@
             &.active
                 transform: rotate(0)
     .lyric-wrapper
+        position relative
+        z-index: 1
+        opacity 0
         font-size: 14px
         color: #cecece
         text-align: center
-        height calc(100vh - 148px - 50px - 20px)
+        margin-top: 20px
+        height calc(100vh - 148px - 50px - 20px - 20px)
         overflow hidden
+        &:after
+            content: ''
+            position: absolute
+            top: 0
+            left 0
+            right 0
+            bottom: 0
+            z-index: 10
         .placehoder
             height: calc((100vh - 148px - 50px - 20px) / 2)
         .lyric

@@ -30,7 +30,7 @@ export default class ProgressBar extends React.Component {
     }
 
     componentWillUnmount() {
-        this.destoryEvents()
+        this.destroyEvents()
     }
 
     initEvents() {
@@ -40,7 +40,7 @@ export default class ProgressBar extends React.Component {
         window.addEventListener('resize', this.refresh)
     }
 
-    destoryEvents() {
+    destroyEvents() {
         this.point.removeEventListener('touchstart', this.touchStart)
         this.point.removeEventListener('touchmove', this.touchMove)
         this.point.removeEventListener('touchend', this.touchEnd)
@@ -49,11 +49,12 @@ export default class ProgressBar extends React.Component {
 
     progressBarClick(e) {
         let pageX = e.pageX
+        
         let { left, width } = this.progressBar.getBoundingClientRect()
-        let offsetX = pageX - left - pointW
+        let offsetX = pageX - left - pointW / 2
         let progressW = width - pointW
-        let percentage = offsetX / progressW
-
+        let percentage = Math.max(0, Math.min(1, offsetX / progressW))
+        
         this.setState({
             percentage
         })

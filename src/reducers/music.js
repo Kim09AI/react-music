@@ -1,6 +1,7 @@
 import { createReducer } from '../utils/reactUtil'
 import * as types from '../actions/actionTypes'
 import storage from 'good-storage'
+import watcher from 'utils/watcher'
 import { distinctList, shuffle } from '../utils'
 
 const MUSIC_KEY = 'musicKey'
@@ -35,6 +36,8 @@ const music = createReducer(initialState, {
         _music.originList = originList
         storage.set(MUSIC_KEY, _music)
 
+        watcher.emit('addMusic', action.music.id)
+
         return {
             ...state,
             originList,
@@ -64,31 +67,31 @@ const music = createReducer(initialState, {
         }
     },
     [types.PREV_MUSIC](state, action) {
-        let currentIndex = state.currentIndex - 1
-        if (currentIndex === -1) {
-            currentIndex = state.currentList.length - 1
+        let index = state.currentIndex - 1
+        if (index === -1) {
+            index = state.currentList.length - 1
         }
 
         return {
             ...state,
-            currentIndex
+            currentIndex: index
         }
     },
     [types.NEXT_MUSIC](state, action) {
         let len = state.currentList.length
-        let currentIndex = state.currentIndex + 1
+        let index = state.currentIndex + 1
 
-        if (currentIndex === len) {
+        if (index === len) {
             if (action.isAuto) {
                 return state
             } else {
-                currentIndex = 0
+                index = 0
             }
         }
 
         return {
             ...state,
-            currentIndex
+            currentIndex: index
         }
     },
     [types.SWITCH_MUSIC](state, action) {
