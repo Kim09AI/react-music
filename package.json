@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "anujs": "^1.3.3",
     "autoprefixer": "7.1.6",
     "axios": "0.18.0",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
     "babel-jest": "20.0.3",
     "babel-loader": "7.1.2",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-react-app": "^3.1.1",
     "babel-runtime": "6.26.0",
     "better-scroll": "^1.9.1",
@@ -57,11 +59,17 @@
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
     "webpack-manifest-plugin": "1.3.2",
-    "whatwg-fetch": "2.0.3"
+    "whatwg-fetch": "2.0.3",
+    "redux-logger": "3.0.6",
+    "stylus": "0.54.5",
+    "stylus-loader": "3.0.2",
+    "webpack-merge": "^4.1.2",
+    "cross-env": "^5.1.5"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "build:anu": "cross-env ANU=true node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
@@ -107,9 +115,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "redux-logger": "3.0.6",
-    "stylus": "0.54.5",
-    "stylus-loader": "3.0.2"
+    
   },
   "proxy": "http://localhost:4000"
 }
