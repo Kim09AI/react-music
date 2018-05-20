@@ -18,7 +18,7 @@
             "port": "22",
             "ref": "origin/master",
             "repo": "git@github.com:Kim09AI/react-music.git",
-            "path": "/www/react-music/production",
+            "path": "/react/react-music/production",
             "ssh_options": "StrictHostKeyChecking=no",
             "post-deploy": "cnpm i && npm run build:anu && cd server && cnpm i && cd .. && pm2 startOrRestart ecosystem.json --env production",
             "env": {
