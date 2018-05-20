@@ -14,7 +14,6 @@ class Play extends React.Component {
         this.state = {
             paused: true,
             currentTime: 0,
-            initSuccess: false,
             showList: false,
             showMiniPlay: true,
             autoPlay: !this.props.showPlay
@@ -30,28 +29,12 @@ class Play extends React.Component {
         this.initAudioEvent()
     }
 
-    componentWillReceiveProps(nextProps) {
-        // let nextMusic = nextProps.currentList[nextProps.currentIndex]
-        // let music =  this.props.currentList[this.props.currentIndex]
-        // let modeChange = nextProps.mode !== this.props.mode
-
-        // if (!modeChange && (nextMusic.id === music.id)) {
-        //     console.log('add')
-        // }
-    }
-
-    componentDidUpdate() {
-        this.initAudioEvent()
+    componentWillUnmount() {
+        this.destroyAudioEvent()
     }
 
     initAudioEvent() {
-        if (!this.audio || this.state.initSuccess) {
-            return
-        }
-
-        this.setState({
-            initSuccess: true
-        })
+        this.fixAutoPlay()
 
         this.audio.addEventListener('error', this.playError)
 
@@ -64,7 +47,7 @@ class Play extends React.Component {
         // hack手机设置currentTime的情况
         this.audio.addEventListener('play', this.readyPlay)
 
-        // 当添加的歌曲和播放器上当前歌曲是同一首时,即歌曲url没变不会自动播放，需要额外处理
+        // 当添加的歌曲和播放器上当前歌曲是同一首时,即歌曲url没变时不会自动播放，手动播放
         watcher.on('addMusic', this.addMusic)
     }
 
@@ -84,21 +67,47 @@ class Play extends React.Component {
         this.audio = null
     }
 
-    readyPlay() {
-        // 如果是第一次播放且不是自动播放,即只初始化播放器的情况
-        if (this.firstMusic === undefined && !this.state.autoPlay) {
-            this.firstMusic = false
+    fixAutoPlay() {
+        const fn = () => {
+            this.isFixAutoPlay = true
+            this.audio.play()
+
+            setTimeout(() => {
+                this.audio.pause()
+                this.isFixAutoPlay = false
+            }, 20)
+            
+            document.removeEventListener('touchstart', fn, true)
+        }
+        document.addEventListener('touchstart', fn, true)
+    }
+
+    readyPlay(e) {
+        // audio的默认url不播放，加不为空的url是避免fixAutoPlay时报错
+        // 去掉url不影响使用，只是有报错(播放列表为空时)
+        if (this.props.currentList.length === 0) return
+
+        // 只初始化播放器的情况
+        if (!this.state.autoPlay) {
+            this.setState({
+                autoPlay: true
+            })
             return
         }
 
+        if (this.isFixAutoPlay) return
+
         this.state.paused && this.setState({
-            paused: false,
-            autoPlay: true
+            paused: false
         })
         this.audio.play()
     }
 
     playError() {
+        if (this.props.currentList.length === 0) {
+            return
+        }
+
         if (this.props.currentList.length === 1) {
             this.alert.show('播放出错')
             this.setState({
@@ -143,6 +152,11 @@ class Play extends React.Component {
 
     addMusic(id) {
         let { currentList, currentIndex } = this.props
+
+        if (currentList.length === 0) {
+            return
+        }
+
         let currentId = currentList[currentIndex].id
         
         if (id === currentId) {
@@ -160,8 +174,7 @@ class Play extends React.Component {
         }
 
         this.setState({
-            paused: !paused,
-            autoPlay: true
+            paused: !paused
         })
     }
 
@@ -206,9 +219,13 @@ class Play extends React.Component {
     percentageChangeFunc(percentage) {
         let { currentIndex, currentList } = this.props
         let duration = currentList[currentIndex].duration / 1000
+        let currentTime = duration * percentage
 
         // 设置currentTime会触发canplay事件(pc),移动为play(仅暂停时)
-        this.audio.currentTime = duration * percentage
+        this.audio.currentTime = currentTime
+        this.setState({
+            currentTime
+        })
         // 手机hack,手动调用play
         this.audio.play()
     }
@@ -229,67 +246,69 @@ class Play extends React.Component {
         this.setState({
             paused: true,
             currentTime: 0,
-            initSuccess: false,
             showList: false,
-            showMiniPlay: true,
-            autoPlay: true
+            showMiniPlay: true
         })
         
-        this.destroyAudioEvent()
         this.props.removeAllMusic()
     }
 
     render() {
-        let { paused, currentTime, showList, showMiniPlay, autoPlay } = this.state
+        let { paused, currentTime, showList, showMiniPlay } = this.state
         let { currentIndex, originList, currentList, showPlay, prevMusic, nextMusic, mode, toggleMode } = this.props
-        
-        if (!showPlay) {
-            return null
-        }
+        let musicUrl = '/fixAutoPlay.mp3'
+
+        try {
+            musicUrl = currentList[currentIndex].url
+        } catch (e) {}
 
         return (
             <div>
-                <MiniPlay 
-                    music={currentList[currentIndex]} 
-                    paused={paused} 
-                    percentage={currentTime / currentList[currentIndex].duration * 1000} 
-                    showMusicList={() => this.showMusicList()}
-                    togglePlay={() => this.togglePlay()} 
-                    swipe={(e) => this.swipe(e)}
-                    contentClick={() => this.toggleMusicPlay()}
-                />
-                <FullPlay
-                    music={currentList[currentIndex]} 
-                    paused={paused} 
-                    percentage={currentTime / currentList[currentIndex].duration * 1000} 
-                    show={!showMiniPlay}
-                    mode={mode}
-                    showMusicList={() => this.showMusicList()}
-                    togglePlay={() => this.togglePlay()} 
-                    prevMusic={() => prevMusic()}
-                    nextMusic={() => nextMusic()}
-                    currentTime={currentTime * 1000}
-                    duration={currentList[currentIndex].duration}
-                    percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)}
-                    goBackFunc={() => this.toggleMusicPlay()}
-                    toggleMode={() => toggleMode()}
-                />
+                <audio ref={audio => this.audio = audio} src={musicUrl}></audio>
                 {
-                    !!currentList.length && <audio ref={audio => this.audio = audio} src={currentList[currentIndex].url} autoPlay={autoPlay}></audio>
+                    showPlay && (
+                        <div>
+                            <MiniPlay 
+                                music={currentList[currentIndex]} 
+                                paused={paused} 
+                                percentage={currentTime / currentList[currentIndex].duration * 1000} 
+                                showMusicList={() => this.showMusicList()}
+                                togglePlay={() => this.togglePlay()} 
+                                swipe={(e) => this.swipe(e)}
+                                contentClick={() => this.toggleMusicPlay()}
+                            />
+                            <FullPlay
+                                music={currentList[currentIndex]} 
+                                paused={paused} 
+                                percentage={currentTime / currentList[currentIndex].duration * 1000} 
+                                show={!showMiniPlay}
+                                mode={mode}
+                                showMusicList={() => this.showMusicList()}
+                                togglePlay={() => this.togglePlay()} 
+                                prevMusic={() => prevMusic()}
+                                nextMusic={() => nextMusic()}
+                                currentTime={currentTime * 1000}
+                                duration={currentList[currentIndex].duration}
+                                percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)}
+                                goBackFunc={() => this.toggleMusicPlay()}
+                                toggleMode={() => toggleMode()}
+                            />
+                            <MusicList 
+                                list={originList} 
+                                show={showList} 
+                                activeId={currentList[currentIndex].id} 
+                                mode={mode}
+                                switchMusic={(id) => this.switchMusic(id)} 
+                                hideMusicList={() => this.hideMusicList()} 
+                                removeMusic={(music) => this.removeMusic(music)}
+                                toggleMode={() => toggleMode()}
+                                clearAll={() => this.showPopup()}
+                            />
+                            <Alert ref={alert => this.alert = alert} />
+                            <Popup title="确定清空播放列表" message="确定清空播放列表" ref={popup => this.popup = popup} confirmFunc={() => this.removeAllMusic()} />
+                        </div>
+                    )
                 }
-                <MusicList 
-                    list={originList} 
-                    show={showList} 
-                    activeId={currentList[currentIndex].id} 
-                    mode={mode}
-                    switchMusic={(id) => this.switchMusic(id)} 
-                    hideMusicList={() => this.hideMusicList()} 
-                    removeMusic={(music) => this.removeMusic(music)}
-                    toggleMode={() => toggleMode()}
-                    clearAll={() => this.showPopup()}
-                />
-                <Alert ref={alert => this.alert = alert} />
-                <Popup title="确定清空播放列表" message="确定清空播放列表" ref={popup => this.popup = popup} confirmFunc={() => this.removeAllMusic()} />
             </div>
         )
     }
