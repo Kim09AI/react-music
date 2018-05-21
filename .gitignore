@@ -8,6 +8,8 @@
 
 # production
 /build
+/config/.uglify-cache
+/config/dist-dll
 
 # misc
 .DS_Store

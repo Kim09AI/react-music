@@ -11,6 +11,9 @@ const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const PreloadWebpackPlugin = require('preload-webpack-plugin')
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
+const DllReferencePlugin = require('webpack/lib/DllReferencePlugin')
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
@@ -283,31 +286,40 @@ module.exports = merge({
         minifyURLs: true,
       },
     }),
+    new PreloadWebpackPlugin({
+      rel: 'prefetch'
+    }),
+    new DllReferencePlugin({
+      manifest: require('../config/dist-dll/vender.manifest.json')
+    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        // Disabled because of an issue with Uglify breaking seemingly valid code:
-        // https://github.com/facebookincubator/create-react-app/issues/2376
-        // Pending further investigation:
-        // https://github.com/mishoo/UglifyJS2/issues/2011
-        comparisons: false,
+    new ParallelUglifyPlugin({
+      uglifyJS: {
+        compress: {
+          warnings: false,
+          // Disabled because of an issue with Uglify breaking seemingly valid code:
+          // https://github.com/facebookincubator/create-react-app/issues/2376
+          // Pending further investigation:
+          // https://github.com/mishoo/UglifyJS2/issues/2011
+          comparisons: false,
+        },
+        output: {
+          comments: false,
+          // Turned on because emoji and regex is not minified properly using default
+          // https://github.com/facebookincubator/create-react-app/issues/2488
+          ascii_only: true,
+        },
       },
       mangle: {
         safari10: true,
       },
-      output: {
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebookincubator/create-react-app/issues/2488
-        ascii_only: true,
-      },
       sourceMap: shouldUseSourceMap,
+      cacheDir: 'config/.uglify-cache',
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
@@ -372,7 +384,7 @@ module.exports = merge({
     // extract webpack runtime and module manifest to its own file in order to
     // prevent vendor hash from being updated whenever app bundle is updated
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vender-manifest',
+      name: 'vender.manifest',
       chunks: ['vendor']
     }),
   ],
