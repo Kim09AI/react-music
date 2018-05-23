@@ -8,8 +8,9 @@
 
 # production
 /build
+/public/base.dll.js
+/public/base.manifest.json
 /config/.uglify-cache
-/config/dist-dll
 
 # misc
 .DS_Store

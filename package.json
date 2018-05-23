@@ -66,6 +66,7 @@
     "build": "node scripts/build.js",
     "build:anu": "cross-env ANU=true node scripts/build.js",
     "build:dll": "webpack --config config/webpack.config.dll.js -p",
+    "build:dll:anu": "webpack --env.ANU_DLL=true --config config/webpack.config.dll.js -p",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {

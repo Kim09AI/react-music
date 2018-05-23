@@ -290,7 +290,7 @@ module.exports = merge({
       rel: 'prefetch'
     }),
     new DllReferencePlugin({
-      manifest: require('../config/dist-dll/vender.manifest.json')
+      manifest: require('../public/base.manifest.json')
     }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.

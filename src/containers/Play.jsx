@@ -70,12 +70,15 @@ class Play extends React.Component {
     fixAutoPlay() {
         const fn = () => {
             this.isFixAutoPlay = true
+            let volume = this.audio.volume
+            this.audio.volume = 0
             this.audio.play()
 
             setTimeout(() => {
                 this.audio.pause()
+                this.audio.volume = volume
                 this.isFixAutoPlay = false
-            }, 20)
+            }, 0)
             
             document.removeEventListener('touchstart', fn, true)
         }
@@ -84,7 +87,7 @@ class Play extends React.Component {
 
     readyPlay(e) {
         // audio的默认url不播放，加不为空的url是避免fixAutoPlay时报错
-        // 去掉url不影响使用，只是有报错(播放列表为空时)
+        // 因为空url的时调用play会报错，去掉url是不影响使用的
         if (this.props.currentList.length === 0) return
 
         // 只初始化播放器的情况
@@ -108,7 +111,7 @@ class Play extends React.Component {
             return
         }
 
-        if (this.props.currentList.length === 1) {
+        if (this.props.currentList.length === 1 || (this.props.currentIndex + 1) === this.props.currentList.length) {
             this.alert.show('播放出错')
             this.setState({
                 paused: true
@@ -256,7 +259,7 @@ class Play extends React.Component {
     render() {
         let { paused, currentTime, showList, showMiniPlay } = this.state
         let { currentIndex, originList, currentList, showPlay, prevMusic, nextMusic, mode, toggleMode } = this.props
-        let musicUrl = '/fixAutoPlay.mp3'
+        let musicUrl = require('../assets/media/fixAutoPlay.mp3')
 
         try {
             musicUrl = currentList[currentIndex].url
