@@ -80,9 +80,9 @@ class Play extends React.Component {
                 this.isFixAutoPlay = false
             }, 0)
             
-            document.removeEventListener('touchstart', fn, true)
+            document.removeEventListener('touchend', fn, true)
         }
-        document.addEventListener('touchstart', fn, true)
+        document.addEventListener('touchend', fn, true)
     }
 
     readyPlay(e) {
