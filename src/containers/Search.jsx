@@ -191,7 +191,7 @@ class Search extends React.Component {
                 duration: song.duration,
                 artistName: song.artists[0].name,
                 picUrl: song.album.picUrl || '/images/notFound.jpg',
-                url: res.data.music.url,
+                url: `http://music.163.com/song/media/outer/url?id=${res.data.music.id}.mp3`,
                 lyric: lyrics.tlyric.lyric || lyrics.lrc.lyric || lyrics.klyric.lyric
             })
 
