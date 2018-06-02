@@ -78,6 +78,8 @@ class Play extends React.Component {
                 this.audio.pause()
                 this.audio.volume = volume
                 this.isFixAutoPlay = false
+
+                this.shouldPlay && this.togglePlay()
             }, 0)
             
             document.removeEventListener('touchend', fn, true)
@@ -168,6 +170,12 @@ class Play extends React.Component {
     }
     
     togglePlay() {
+        // 点击播放触发fixAutoPlay时，设置标记保证在fixAutoPlay之后再播放(pc hack)
+        if (this.isFixAutoPlay) {
+            this.shouldPlay = true
+            return
+        }
+
         let paused = this.audio.paused
 
         if (paused) { // 暂停状态
