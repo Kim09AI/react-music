@@ -48,7 +48,7 @@ export default class FullPlay extends React.Component {
     }
 
     componentWillUnmount() {
-        this.lyric.stop()
+        this.lyricStop()
         this.lyric = null
         watcher.destroy('musicPlayEnd', this.resetLyricPlay)
 
@@ -56,7 +56,13 @@ export default class FullPlay extends React.Component {
     }
 
     initLyric(lyric, play) {
-        this.lyric && this.lyric.stop()
+        this.lyricStop()
+
+        if (!lyric) {
+            this.lyric = null
+            return
+        }
+
         this.lyric = new Lyric(lyric, (...args) => this.lyricHandler(...args))
 
         this.setState({
@@ -74,11 +80,11 @@ export default class FullPlay extends React.Component {
     }
 
     lyricPlay(startTime = 0) {
-        this.lyric.play(startTime)
+        this.lyric && this.lyric.play(startTime)
     }
 
     lyricStop() {
-        this.lyric.stop()
+        this.lyric && this.lyric.stop()
     }
 
     showLyric() {
@@ -100,7 +106,7 @@ export default class FullPlay extends React.Component {
         
         // 点击或拖动滚动条时，currentTime 如果小于第一条歌词的播放时间
         // lyric实例因为没有匹配的歌词，导致currentLine停留在上一次
-        if (currentTime < this.state.lines[0].time) {
+        if (this.lyric && this.state.lines.length && currentTime < this.state.lines[0].time) {
             this.setState({
                 currentLine: 0
             })
@@ -110,13 +116,15 @@ export default class FullPlay extends React.Component {
     }
 
     setLyricScroll(currentLine) {
-        if (!this.lyricDom) {
+        if (!this.lyric || !this.state.lines.length) {
             return
         }
 
         setTimeout(() => {
+            let lyricWrapperH = this.lyricWrapper.getBoundingClientRect().height
+            let lyricPlacehoderH = this.lyricPlacehoder.getBoundingClientRect().height
             let maxScrollY = this.scroll.getMaxScrollY()
-            let lyricH = this.lyricDom.getBoundingClientRect().height
+            let lyricH = (lyricWrapperH - lyricPlacehoderH) / this.state.lines.length
             let scrollY = Math.max(-lyricH * currentLine, maxScrollY)
             this.scroll.scrollTo(0, scrollY, 300)
         }, 20)
@@ -152,16 +160,12 @@ export default class FullPlay extends React.Component {
                 </div>
                 <div className={classNames({ 'lyric-wrapper': true, visible: showLyric })} onClick={() => this.hideLyric()}>
                     <Scroll ref={scroll => this.scroll = scroll}>
-                        <div>
-                            <div className="placehoder"></div>
+                        <div ref={lyricWrapper => this.lyricWrapper = lyricWrapper}>
+                            <div className="placehoder" ref={lyricPlacehoder => this.lyricPlacehoder = lyricPlacehoder}></div>
                             {
-                                lines.map((item, index) => {
-                                    if (index === 0) {
-                                        return <div ref={lyricDom => this.lyricDom = lyricDom} key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
-                                    } else {
-                                        return <div key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
-                                    }
-                                })
+                                lines.map((item, index) => (
+                                    <div key={index} className={classNames({ lyric: true, active: index === currentLine })}>{item.txt}</div>
+                                ))
                             }
                         </div>
                     </Scroll>

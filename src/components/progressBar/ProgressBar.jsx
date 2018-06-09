@@ -11,9 +11,6 @@ export default class ProgressBar extends React.Component {
             percentage: this.props.percentage || 0
         }
 
-        this.touchStart = this.touchStart.bind(this)
-        this.touchMove = this.touchMove.bind(this)
-        this.touchEnd = this.touchEnd.bind(this)  
         this.refresh = this.refresh.bind(this)      
     }
 
@@ -34,16 +31,10 @@ export default class ProgressBar extends React.Component {
     }
 
     initEvents() {
-        this.point.addEventListener('touchstart', this.touchStart)
-        this.point.addEventListener('touchmove', this.touchMove)
-        this.point.addEventListener('touchend', this.touchEnd)
         window.addEventListener('resize', this.refresh)
     }
 
     destroyEvents() {
-        this.point.removeEventListener('touchstart', this.touchStart)
-        this.point.removeEventListener('touchmove', this.touchMove)
-        this.point.removeEventListener('touchend', this.touchEnd)
         window.removeEventListener('resize', this.refresh)
     }
 
@@ -104,7 +95,13 @@ export default class ProgressBar extends React.Component {
         return (
             <div className="progress-bar-wrapper" onClick={(e) => this.progressBarClick(e)} ref={progressBar => this.progressBar = progressBar}>
                 <div className="percentage" style={{ width: `${offsetX}px`}}></div>
-                <span className="point" style={{ transform: `translateX(${offsetX}px)`, WebkitTransform: `translate(${offsetX}px, -50%)` }} ref={point => this.point = point}></span>
+                <span 
+                    className="point" 
+                    style={{ transform: `translateX(${offsetX}px)`, WebkitTransform: `translate(${offsetX}px, -50%)` }}
+                    onTouchStart={(e) => this.touchStart(e)}
+                    onTouchMove={(e) => this.touchMove(e)}
+                    onTouchEnd={(e) => this.touchEnd(e)}
+                />
             </div>
         )
     }
