@@ -31,7 +31,7 @@ export default class FullPlay extends React.Component {
         if (nextProps.music.id !== this.props.music.id) {
             this.initLyric(nextProps.music.lyric, !this.props.paused)
         }
-        if (nextProps.show === true && this.props.show === false) {
+        if (nextProps.showFullPlay === true && this.props.showFullPlay === false) {
             this.wrapper.style.display = 'block'
         }
     }
@@ -42,7 +42,7 @@ export default class FullPlay extends React.Component {
         }
         
         // 歌词行数已改变或者是播放器由hide变成show
-        if (this.state.currentLine !== prevState.currentLine || (this.props.show === true && prevProps.show === false)) {
+        if (this.state.currentLine !== prevState.currentLine || (this.props.showFullPlay === true && prevProps.showFullPlay === false)) {
             this.setLyricScroll(this.state.currentLine)
         }
     }
@@ -99,7 +99,7 @@ export default class FullPlay extends React.Component {
         })
     }
 
-    percentageChangeFunc(percentage) {
+    _percentageChangeFunc(percentage) {
         this.props.percentageChangeFunc(percentage)
 
         let currentTime = this.props.duration * percentage
@@ -137,18 +137,19 @@ export default class FullPlay extends React.Component {
         !this.props.paused && this.lyricPlay()
     }
 
+    // 播放器显示隐藏的结束回调
     transitionEnd() {
-        if (!this.props.show) {
+        if (!this.props.showFullPlay) {
             this.wrapper.style.display = 'none'
         }
     }
 
     render() {
         let { showLyric, lines, currentLine } = this.state
-        let { music, paused, show, togglePlay, prevMusic, nextMusic, showMusicList, percentage, currentTime, duration, goBackFunc, toggleMode, mode } = this.props
+        let { music, paused, showFullPlay, togglePlay, prevMusic, nextMusic, showMusicList, percentage, currentTime, duration, goBackFunc, toggleMode, mode } = this.props
     
         return (
-            <div className={classNames({ 'full-play-wrapper': true, active: show })} ref={wrapper => this.wrapper = wrapper}>
+            <div className={classNames({ 'full-play-wrapper': true, active: showFullPlay })} ref={wrapper => this.wrapper = wrapper}>
                 <div className="bg" style={{ backgroundImage: `url(${music.picUrl})`}}></div>
                 <div className="play-header">
                     <i className="iconfont back" onClick={() => goBackFunc()}>&#xe606;</i>
@@ -173,7 +174,7 @@ export default class FullPlay extends React.Component {
                 <div className={classNames({ 'music-turn-wrapper': true, visible: !showLyric })} onClick={() => this.showLyric()}>
                     <div className={classNames({ 'dist': true, active: !paused })}></div>
                     <div className="music-turn-bg">
-                        <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, stop: paused && show })} />
+                        <img src={music.picUrl} alt="" className={classNames({ 'music-turn': true, stop: paused && showFullPlay })} />
                     </div>
                 </div>
                 <div className="control-wrapper">
@@ -186,7 +187,7 @@ export default class FullPlay extends React.Component {
                     <div className="progressbar-wrapper">
                         <span>{timeFormat(currentTime)}</span>
                         <div className="progress">
-                            <ProgressBar percentage={percentage} percentageChangeFunc={(percentage) => this.percentageChangeFunc(percentage)} />
+                            <ProgressBar percentage={percentage} percentageChangeFunc={(percentage) => this._percentageChangeFunc(percentage)} />
                         </div>
                         <span>{timeFormat(duration)}</span>
                     </div>
@@ -218,7 +219,7 @@ FullPlay.propTypes = {
     togglePlay: PropTypes.func,
     paused: PropTypes.bool,
     percentage: PropTypes.number,
-    show: PropTypes.bool,
+    showFullPlay: PropTypes.bool,
     showMusicList: PropTypes.func,
     nextMusic: PropTypes.func,
     prevMusic: PropTypes.func,

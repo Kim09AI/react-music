@@ -26,7 +26,7 @@ class Home extends React.Component {
         this.props.history.push(path)
     }
 
-    currentIndex() {
+    getCurrentIndex() {
         let { pathname } = this.props.location
         let index = this.state.tabs.findIndex(tab => pathname === tab.path)
         return index
@@ -36,7 +36,7 @@ class Home extends React.Component {
         return (
             <div>
                 <CommonHeader />
-                <TabMenu tabs={this.state.tabs} currentIndex={this.currentIndex()} onTabClick={(index) => this.onTabClick(index)} />
+                <TabMenu tabs={this.state.tabs} currentIndex={this.getCurrentIndex()} onTabClick={(index) => this.onTabClick(index)} />
                 <div className="scroll-wrapper" style={{ bottom: this.props.showPlay ? '50px' : 0 }}>
                     {/* 添加嵌套路由 */}
                     {this.props.children}

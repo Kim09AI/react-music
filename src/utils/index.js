@@ -81,6 +81,12 @@ export const debounce = function(fn, delay = 100, context) {
     }
 }
 
+/**
+ * 刷新scroll组件的高度
+ * @param {object} scroll scroll组件实例
+ * @param {boolean} showPlay 是否显示mini播放器
+ * @param {*} prevShowPlay 组件prevProps的showPlay值
+ */
 export const refreshScroll = (scroll, showPlay, prevShowPlay) => {
     if (showPlay === prevShowPlay) {
         return

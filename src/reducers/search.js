@@ -2,7 +2,7 @@ import { createReducer } from '../utils/reactUtil'
 import * as types from '../actions/actionTypes'
 import storage from 'good-storage'
 
-const SEARCH_HISTORY_KEY = 'searchHistoryKey'
+const SEARCH_HISTORY_KEY = 'SEARCH_HISTORY_KEY'
 
 const initialState = {
     searchSuggest: {},

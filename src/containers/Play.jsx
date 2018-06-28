@@ -4,7 +4,6 @@ import { prevMusic, nextMusic, switchMusic, removeMusic, toggleMode, removeAllMu
 import MiniPlay from 'components/miniPlay/MiniPlay'
 import MusicList from 'components/musicList/MusicList'
 import FullPlay from 'components/fullPlay/FullPlay'
-import Alert from 'components/alert/Alert'
 import Popup from 'components/popup/Popup'
 import watcher from 'utils/watcher'
 
@@ -114,14 +113,14 @@ class Play extends React.Component {
         }
 
         if (this.props.currentList.length === 1 || (this.props.currentIndex + 1) === this.props.currentList.length) {
-            this.alert.show('播放出错')
+            watcher.emit('showMessage', '播放出错')
             this.setState({
                 paused: true
             })
             return
         }
         
-        this.alert.show('播放出错,自动切换下一首')
+        watcher.emit('showMessage', '播放出错,自动切换下一首')
         this.props.nextMusic()
     }
 
@@ -218,8 +217,8 @@ class Play extends React.Component {
 
         this.props.switchMusic(id)
     }
-
-    swipe(e) {
+    
+    swipeHandle(e) {
         if (e.direction === 2) { // 左滑
             this.props.nextMusic()
         } else if (e.direction === 4) { // 右滑
@@ -285,14 +284,14 @@ class Play extends React.Component {
                                 percentage={currentTime / currentList[currentIndex].duration * 1000} 
                                 showMusicList={() => this.showMusicList()}
                                 togglePlay={() => this.togglePlay()} 
-                                swipe={(e) => this.swipe(e)}
+                                swipeHandle={(e) => this.swipeHandle(e)}
                                 contentClick={() => this.toggleMusicPlay()}
                             />
                             <FullPlay
                                 music={currentList[currentIndex]} 
                                 paused={paused} 
                                 percentage={currentTime / currentList[currentIndex].duration * 1000} 
-                                show={!showMiniPlay}
+                                showFullPlay={!showMiniPlay}
                                 mode={mode}
                                 showMusicList={() => this.showMusicList()}
                                 togglePlay={() => this.togglePlay()} 
@@ -315,7 +314,6 @@ class Play extends React.Component {
                                 toggleMode={() => toggleMode()}
                                 clearAll={() => this.showPopup()}
                             />
-                            <Alert ref={alert => this.alert = alert} />
                             <Popup title="确定清空播放列表" message="确定清空播放列表" ref={popup => this.popup = popup} confirmFunc={() => this.removeAllMusic()} />
                         </div>
                     )

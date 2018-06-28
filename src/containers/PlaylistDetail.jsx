@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import SongList from 'components/songList/SongList'
 import Scroll from '../components/scroll/Scroll'
-import Alert from 'components/alert/Alert'
 import api from 'api'
 import { addMusic } from '../actions/music'
 import { numFormat, refreshScroll } from 'utils'
-import Music from '../utils/music'
+import Music from 'utils/music'
+import watcher from 'utils/watcher'
 import './playlistDetail.styl'
 
 class PlaylistDetail extends React.Component {
@@ -45,7 +45,7 @@ class PlaylistDetail extends React.Component {
             let lyrics = res.data.lyrics
 
             if (!res.data.music.url) {
-                this.alert.show('添加歌曲失败,找不到播放地址')
+                watcher.emit('showMessage', '添加歌曲失败,找不到播放地址')
                 return
             }
             
@@ -139,7 +139,6 @@ class PlaylistDetail extends React.Component {
                         )
                     }
                 </div>
-                <Alert ref={alert => this.alert = alert} />
             </div>
         )
     }

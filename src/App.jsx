@@ -4,6 +4,7 @@ import { routes } from './utils/reactUtil'
 import routeConfig from './router'
 import Slidebar from './components/slidebar/Slidebar'
 import Play from './containers/Play'
+import Alert from './components/alert/Alert'
 
 class App extends Component {
     render() {
@@ -19,6 +20,7 @@ class App extends Component {
                 </Router>
                 <Slidebar />
                 <Play />
+                <Alert />
             </div>
         )
     }

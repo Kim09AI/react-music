@@ -4,13 +4,14 @@ import storage from 'good-storage'
 import watcher from 'utils/watcher'
 import { distinctList, shuffle } from '../utils'
 
-const MUSIC_KEY = 'musicKey'
+const MUSIC_KEY = 'MUSIC_KEY'
 
 const _music = storage.get(MUSIC_KEY, {
     originList: [],
     mode: 'order', // random order loop
 })
 
+// 剔除已经存在的歌曲
 const musicDistinctList = (state, action) => distinctList(state.originList, item => item.id === action.music.id)
 
 const getCurrentList = ({ originList, mode }) => {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import api from 'api'
 import Music from 'utils/music'
 import { refreshScroll } from 'utils'
+import watcher from 'utils/watcher'
 import { addMusic } from '../actions/music'
 import { getSearchSuggest, addSearchHistory, rmSearchHistory } from '../actions/search'
 import HistoryList from 'components/historyList/HistoryList'
@@ -16,7 +17,6 @@ import PlayList from 'components/playList/PlayList'
 import RadioList from 'components/radioList/RadioList'
 import Loading from 'components/loading/Loading'
 import Swipe from 'components/swipe/Swipe'
-import Alert from 'components/alert/Alert'
 import './search.styl'
 
 class Search extends React.Component {
@@ -110,19 +110,19 @@ class Search extends React.Component {
             keywords
         })
         
-        this.addSearchHistory(keywords)
+        this._addSearchHistory(keywords)
 
         let path = `/search/${encodeURIComponent(keywords)}`
         this.state.isSearchResultPage ? this.props.history.replace(path) : this.props.history.push(path)
     }
 
     keywordsClick(keywords) {
-        this.addSearchHistory(keywords)
+        this._addSearchHistory(keywords)
 
         this.props.history.push(`/search/${encodeURIComponent(keywords)}`)
     }
 
-    addSearchHistory(keywords) {
+    _addSearchHistory(keywords) {
         keywords = keywords.trim()
         
         if (!keywords) {
@@ -181,7 +181,7 @@ class Search extends React.Component {
             let lyrics = res.data.lyrics
 
             if (!res.data.music.url) {
-                this.alert.show('添加歌曲失败,找不到播放地址')
+                watcher.emit('showMessage', '添加歌曲失败,找不到播放地址')
                 return
             }
             
@@ -255,7 +255,6 @@ class Search extends React.Component {
                         </Swipe>
                     )
                 }
-                <Alert ref={alert => this.alert = alert} />
             </div>
         )
     }

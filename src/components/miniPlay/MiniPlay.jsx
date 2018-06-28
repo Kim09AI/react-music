@@ -4,7 +4,7 @@ import Hammer from 'react-hammerjs'
 import './miniPlay.styl'
 
 export default function MiniPlay(props) {
-    let { music, togglePlay, paused, borderW, r, percentage, showMusicList, swipe, contentClick } = props
+    let { music, togglePlay, paused, borderW, r, percentage, showMusicList, swipeHandle, contentClick } = props
 
     let borderR = borderW + r
     let width = borderR * 2
@@ -14,7 +14,7 @@ export default function MiniPlay(props) {
         <div className="mini-play-wrapper">
             <img className="icon" src={music.picUrl} alt=""/>
             <div className="content" onClick={() => contentClick()}>
-                <Hammer onSwipe={(e) => swipe(e)}>
+                <Hammer onSwipe={(e) => swipeHandle(e)}>
                     <div>
                         <div className="name">{music.name}</div>
                         <div className="tip">横滑可以切换上下首哦</div>
@@ -48,11 +48,11 @@ MiniPlay.propTypes = {
         picUrl: PropTypes.string,
         url: PropTypes.string
     }),
-    show: PropTypes.bool,
+    showMiniPlay: PropTypes.bool,
     togglePlay: PropTypes.func,
     paused: PropTypes.bool,
     percentage: PropTypes.number,
     showMusicList: PropTypes.func,
-    swipe: PropTypes.func,
+    swipeHandle: PropTypes.func,
     contentClick: PropTypes.func
 }

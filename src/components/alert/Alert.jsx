@@ -1,5 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
+import watcher from 'utils/watcher'
 import './alert.styl'
 
 class Alert extends React.Component {
@@ -10,14 +11,17 @@ class Alert extends React.Component {
             msg: ''
         }
         this.transitionEnd = this.transitionEnd.bind(this)
+        this.show = this.show.bind(this)
     }
 
     componentDidMount() {
         this.alert.addEventListener('webkitTransitionEnd', this.transitionEnd)
+        watcher.on('showMessage', this.show)
     }
 
     componentWillUnmount() {
         this.alert.addEventListener('webkitTransitionEnd', this.transitionEnd)
+        watcher.destroy('showMessage', this.show)
     }
 
     transitionEnd() {
